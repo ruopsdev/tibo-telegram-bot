@@ -1,4 +1,4 @@
-Tibo.app - Theory of inventive based offers
+Tibo.app - Theory of inventive based offers @meteoritt
 
 # tibo-telegram-bot
 
@@ -11,7 +11,7 @@ Open Source Code (СПО): [https://github.com/ruopsdev/tibo-telegram-bot](https
 * [https://medium.com/ruopsdev/git-flow-presentation-b80643390888?source=collection_home_page----925f883655a3-----0-----------------------------------](https://medium.com/ruopsdev/git-flow-presentation-b80643390888?source=collection_home_page----925f883655a3-----0-----------------------------------) - Презентация методологии git-flow - [Презентация методологии git-flow]([https://medium.com/ruopsdev/git-flow-presentation-b80643390888?source=collection_home_page----925f883655a3-----0-----------------------------------](https://medium.com/ruopsdev/git-flow-presentation-b80643390888?source=collection_home_page----925f883655a3-----0-----------------------------------))
 * [https://medium.com/ruopsdev/git-flow-presentation-b80643390888?source=collection_home_page----925f883655a3-----0-----------------------------------](https://medium.com/ruopsdev/git-flow-presentation-b80643390888?source=collection_home_page----925f883655a3-----0-----------------------------------) - перевод через сайт [https://translate.google.com](https://translate.google.com)
 
-* Автор (Author): [Sergei Chudakov](https://sergos.medium.com/) - Автор книги [Dive into Penguin](https://github.com/meteoritt/gentleman) [Сергей Чудаков](https://sergos.medium.com/) - [Погружение в Пингвина](https://github.com/meteoritt/gentleman) - Книга про работу в консоли Linux для начинающих изучать WSL, Zsh и Bash на русском: [https://github.com/meteoritt/gentleman/blob/master/README.ru-RU.md](https://github.com/meteoritt/gentleman/blob/master/README.ru-RU.md) - Для навигации в консоли оставьте пальчиками Ctrl + <- (Arrow Left), Ctrl + -> (Arrow Right), Shift + Arrow - Marker, Copy, Paste. Right Click Mouse, Middle Button Click. Double Clic Left Button Mouse.
+* Автор (Author): [Sergei Chudakov](https://sergos.medium.com/) - Автор книги [Dive into Penguin](https://github.com/meteoritt/gentleman) [Сергей Чудаков](https://sergos.medium.com/) - [Погружение в Пингвина](https://github.com/meteoritt/gentleman) - Книга про работу в консоли Linux для начинающих изучать WSL, Zsh и Bash на русском: [https://github.com/meteoritt/gentleman/blob/master/README.ru-RU.md](https://github.com/meteoritt/gentleman/blob/master/README.ru-RU.md) - Для навигации в консоли оставьте пальчиками Ctrl + <- (Arrow Left), Ctrl + -> (Arrow Right), Shift + Arrow - Marker, Copy, Paste. Right Click Mouse, Middle Button Click. Double Click Left Button Mouse. USB-D.
 
 * Tables 1 (Таблица One):
 
