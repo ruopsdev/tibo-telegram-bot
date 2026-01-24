@@ -67,6 +67,6 @@ Open Source Code (СПО): [https://github.com/ruopsdev/tibo-telegram-bot](https
 
 Sign (Подпись): стерхов 你會說中文嗎？- ни хуу шуа шонгвин ма [https://burui.t.me](https://burui.t.me) (sj588 布瑞)
 
-**ALERT**: Ищу коллег для стартапа по написанию кода платформы Joker, основанной на Topalias: [https://github.com/ruopsdev/topalias](https://github.com/ruopsdev/topalias)
+**ALERT**: Ищу коллег для стартапа по написанию кода платформы Joker (codename RED.L), основанной на Topalias: [https://github.com/ruopsdev/topalias](https://github.com/ruopsdev/topalias)
 
 Я автор книги про Linux: https://github.com/meteoritt/gentleman (если надо настроить домашний компьютер на Windows с WSL – Windows Subsystem Linux под выполнение пет-проджектов, хобби, проектов)
