@@ -4,6 +4,8 @@ Tibo.app - Theory of inventive based offers
 
 Telegram bot @albert_ai_bot (https://t.me/albert_ai_bot)
 
+Open Source Code (СПО): [https://github.com/ruopsdev/tibo-telegram-bot](https://github.com/ruopsdev/tibo-telegram-bot)
+
 # Git-Flow методология метрологии запуска фичеветок в кластере Kubernetes: [https://medium.com/ruopsdev/git-flow-presentation-b80643390888?source=collection_home_page----925f883655a3-----0-----------------------------------](https://medium.com/ruopsdev/git-flow-presentation-b80643390888?source=collection_home_page----925f883655a3-----0-----------------------------------)
 
 * [https://medium.com/ruopsdev/git-flow-presentation-b80643390888?source=collection_home_page----925f883655a3-----0-----------------------------------](https://medium.com/ruopsdev/git-flow-presentation-b80643390888?source=collection_home_page----925f883655a3-----0-----------------------------------) - Презентация методологии git-flow - [Презентация методологии git-flow]([https://medium.com/ruopsdev/git-flow-presentation-b80643390888?source=collection_home_page----925f883655a3-----0-----------------------------------](https://medium.com/ruopsdev/git-flow-presentation-b80643390888?source=collection_home_page----925f883655a3-----0-----------------------------------))
