@@ -59,7 +59,7 @@ Telegram bot @albert_ai_bot (https://t.me/albert_ai_bot)
 
  
 
-# Мой телеграм: https://t.me/ChudakovServer или @ChudakovSergey или можно найти по номеру телефона +79638610401
+# Мой телеграм: https://t.me/ChudakovSergey или @ChudakovSergey или можно найти по номеру телефона +79638610401
 
 # Личная почта: csredrat@gmail.com
 
