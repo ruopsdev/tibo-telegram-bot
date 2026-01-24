@@ -1,4 +1,4 @@
-Tibo.app - Theory of inventive based offers @meteoritt
+Tibo.app - Theory of inventive based offers [@meteoritt](https://github.com/meteoritt)
 
 # tibo-telegram-bot
 
