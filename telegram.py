@@ -276,8 +276,9 @@ def command_mem(message: Message):
     bot.send_photo(cid, mem[0])
 
 
+# test api
 @bot.message_handler(commands=['getimage', 'image'])
-def command_mem(message: Message):
+def command_image(message: Message):
     cid = message.chat.id
     r = requests.get("https://api.imgflip.com/get_memes")
     print(r.content)
