@@ -423,7 +423,7 @@ def webhook():
         return f"Error: {str(e)}", 500
 
 
-@app.route('/restart')
+@app.route('/restart', methods=['GET', 'POST'])
 def webhook_restart():
     try:
         restart_url = f"https://api.render.com/v1/services/{service_id}/restart"
@@ -433,8 +433,32 @@ def webhook_restart():
         }
         response = requests.post(restart_url, headers=headers)
         print(f"Restart request sent. Status code: {response.status_code}")
-        if response.status_code == 200:
-            return f"Service restart initiated successfully. Status: {response.status_code}", 200
+        print(f"Restart response: {response.text}")
+        
+        if response.status_code == 200 or response.status_code == 201:
+            # Parse the restart response to get current status
+            try:
+                restart_data = response.json()
+                # Render API returns service info in the restart response
+                # Try different possible paths for status
+                service_status = None
+                if 'service' in restart_data:
+                    service_obj = restart_data['service']
+                    # Check various possible status fields
+                    service_status = (service_obj.get('status') or 
+                                    service_obj.get('serviceDetails', {}).get('status') or
+                                    service_obj.get('deploy', {}).get('status') or
+                                    'Restart initiated')
+                elif 'status' in restart_data:
+                    service_status = restart_data['status']
+                else:
+                    service_status = 'Restart initiated'
+                
+                return f"Service restart initiated successfully.<br>Current Status: {service_status}<br>HTTP Status: {response.status_code}", 200
+            except (ValueError, KeyError) as parse_error:
+                # If JSON parsing fails, return basic success message
+                print(f"Could not parse restart response: {parse_error}")
+                return f"Service restart initiated successfully. Status code: {response.status_code}", 200
         else:
             return f"Failed to restart service. Status: {response.status_code}, Response: {response.text}", response.status_code
     except Exception as e:
@@ -442,6 +466,44 @@ def webhook_restart():
         import traceback
         traceback.print_exc()
         return f"Error: {str(e)}", 500
+
+
+@app.route('/status', methods=['GET'])
+def service_status():
+    """Check Render service status"""
+    try:
+        service_url = f"https://api.render.com/v1/services/{service_id}"
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+        response = requests.get(service_url, headers=headers)
+        
+        if response.status_code == 200:
+            service_data = response.json()
+            # Try to extract status from various possible locations
+            status_info = {}
+            if 'service' in service_data:
+                service_obj = service_data['service']
+                status_info['status'] = service_obj.get('status', 'Unknown')
+                status_info['name'] = service_obj.get('name', 'Unknown')
+                if 'serviceDetails' in service_obj:
+                    status_info['details'] = service_obj['serviceDetails'].get('status', 'Unknown')
+            else:
+                status_info = service_data
+            
+            return {
+                "service_id": service_id,
+                "status": status_info,
+                "http_status": response.status_code
+            }, 200
+        else:
+            return {"error": f"Failed to get service status. HTTP {response.status_code}", "response": response.text}, response.status_code
+    except Exception as e:
+        print(f"Error checking service status: {e}")
+        import traceback
+        traceback.print_exc()
+        return {"error": str(e)}, 500
 
 
 @app.route('/health')
@@ -465,13 +527,7 @@ def debug():
         return {"error": str(e)}, 500
 
 
-url = f"https://api.render.com/v1/services/{service_id}/restart"
-headers = {
-    "Authorization": f"Bearer {api_key}",
-    "Content-Type": "application/json"
-}
-response = requests.post(url, headers=headers)
-print(response.status_code)
+# Removed automatic restart on module import - restart should only be triggered via /restart endpoint
 
 
 first_request = True
