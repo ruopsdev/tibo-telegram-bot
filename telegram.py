@@ -110,7 +110,7 @@ beer_photo = [
 
 bar_members = {
     '41365750': {
-        'username': 'ChydakovSergey',
+        'username': 'ChudakovSergey',
         'first': 'Sergey'
     },
     '670403191': {
@@ -274,6 +274,24 @@ def command_mem(message: Message):
         # print(mem[i])
     random.shuffle(mem)
     bot.send_photo(cid, mem[0])
+
+
+# test api
+@bot.message_handler(commands=['getimage', 'image'])
+def command_image(message: Message):
+    cid = message.chat.id
+    r = requests.get("https://api.imgflip.com/get_memes")
+    print(r.content)
+    json_data = r.json()
+    list_mem = json_data['data']['memes']
+    # print(list_mem)
+    count_memes = len(list_mem)
+    mem = []
+    for i in range(0, count_memes):
+        mem.append(json_data['data']['memes'][i]['url'])
+        # print(image[i])
+    random.shuffle(image)
+    bot.send_photo(cid, image[0])
 
 
 @bot.message_handler(commands=['meme'])
