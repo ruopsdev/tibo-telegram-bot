@@ -289,9 +289,9 @@ def command_image(message: Message):
     mem = []
     for i in range(0, count_memes):
         mem.append(json_data['data']['memes'][i]['url'])
-        # print(mem[i])
-    random.shuffle(mem)
-    bot.send_photo(cid, mem[0])
+        # print(image[i])
+    random.shuffle(image)
+    bot.send_photo(cid, image[0])
 
 
 @bot.message_handler(commands=['meme'])
