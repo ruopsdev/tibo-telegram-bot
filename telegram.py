@@ -276,6 +276,23 @@ def command_mem(message: Message):
     bot.send_photo(cid, mem[0])
 
 
+@bot.message_handler(commands=['getimage', 'image'])
+def command_mem(message: Message):
+    cid = message.chat.id
+    r = requests.get("https://api.imgflip.com/get_memes")
+    print(r.content)
+    json_data = r.json()
+    list_mem = json_data['data']['memes']
+    # print(list_mem)
+    count_memes = len(list_mem)
+    mem = []
+    for i in range(0, count_memes):
+        mem.append(json_data['data']['memes'][i]['url'])
+        # print(mem[i])
+    random.shuffle(mem)
+    bot.send_photo(cid, mem[0])
+
+
 @bot.message_handler(commands=['meme'])
 def command_mem(message: Message):
     cid = message.chat.id
