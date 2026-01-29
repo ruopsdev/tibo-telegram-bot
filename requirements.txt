@@ -11,7 +11,7 @@ cryptography==3.4.8
 dbus-python==1.2.18
 distlib==0.4.0
 distro==1.7.0
-distro-info==1.1+ubuntu0.2
+distro-info==1.0
 docutils==0.22.3
 dulwich==0.25.2
 fastjsonschema==2.21.2
