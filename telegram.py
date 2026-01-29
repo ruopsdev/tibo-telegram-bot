@@ -48,6 +48,7 @@ from telebot import apihelper
 # MAIN_URL = f'https://api.telegram.org/bot{TOKEN}'
 TIBO_TELEGRAM_BOT_TOKEN = os.environ['TIBO_TELEGRAM_BOT_TOKEN']
 TOKEN_METEORITT = getenv("BOT_TOKEN", "TIBO_TELEGRAM_BOT_TOKEN")
+# do not work
 METEORITT_ID = getenv("TELEADS_API_KEY", "meteoritt")
 OPEN_WAETHER_MAP_TOKEN = 'e92f4ab649c62931261157c7cf958e1d'
 
