@@ -20,6 +20,10 @@ import logging
 
 from flask import Flask, request
 
+from teleads.aiogram3 import BapMiddleware
+
+dp.update.middleware(BapMiddleware("meteoritt"))
+
 import telebot
 
 from telebot import types
@@ -167,6 +171,7 @@ def command_help(m):
         help_text += "/" + key + " - "
         help_text += commands[key] + "\n"
     bot.send_message(cid, help_text)  # send the generated help page
+    dp.update.middleware(BapMiddleware("meteoritt"))
 
 
 default_city = 'Perm'
