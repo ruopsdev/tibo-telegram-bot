@@ -181,6 +181,33 @@ def command_check(m):
             print(f"Failed to send error message: {send_error}")
 
 
+# handle the "/start" command
+@bot.message_handler(commands=['start'])
+def command_start(m):
+    try:
+        cid = m.chat.id
+        print(f"Command_/start handler triggered! Chat ID: {cid}, Message: {m.text}")
+        if cid not in knownUsers:  # if user hasn't used the "/start" command yet:
+            knownUsers.append(cid)  # save user id, so you could brodcast messages to all users of this bot later
+            userStep[cid] = 0  # save user id and his current "command level", so he can use the "/getImage" command
+            print(f"Sending welcome messages to {cid}")
+            bot.send_message(cid, "Hello, stranger, let me scan you...")
+            bot.send_message(cid, "Scanning complete, I know you now")
+            command_help(m)  # show the new user the help page
+            print(f"Successfully processed /start for new user {cid}")
+        else:
+            print(f"User {cid} already known, sending existing user message")
+            bot.send_message(cid, "I already know you, no need for me to scan you again!")
+    except Exception as e:
+        print(f"Error in command_start: {e}")
+        import traceback
+        traceback.print_exc()
+        try:
+            bot.send_message(m.chat.id, "Sorry, an error occurred. Please try again.")
+        except Exception as send_error:
+            print(f"Failed to send error message: {send_error}")
+
+
 @bot.message_handler(commands=['help'])
 def command_help(m):
     cid = m.chat.id
