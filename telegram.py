@@ -27,7 +27,7 @@ import sys
 from os import getenv
 
 from aiogram import Bot, Dispatcher
-from aiogram.utils import markdown as html
+from aiogram.utils.markdown import bold, hbold
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
@@ -620,7 +620,7 @@ async def command_start_handler(message: Message) -> None:
     # and the target chat will be passed to :ref:`aiogram.methods.send_message.SendMessage`
     # method automatically or call API method directly via
     # Bot instance: `bot.send_message(chat_id=message.chat.id, ...)`
-    await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
+    await message.answer(f"Hello, {bold(message.from_user.full_name)}!")
 
 
 @dp.message()
