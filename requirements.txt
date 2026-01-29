@@ -1,4 +1,5 @@
-aiohttp>=3.13.0
+aiohttp>=3.9,<3.13
+typing-extensions>=4.7,<5.1
 anyio==4.12.1
 blinker==1.9.0
 build==1.4.0
@@ -77,4 +78,4 @@ wadllib==1.3.6
 Werkzeug==3.1.5
 zipp==1.0.0
 zstandard==0.25.0
-aiogram>=3.14.0
+aiogram>=3.22,<3.25
