@@ -122271,3 +122271,144 @@ Both --no-clobber and --convert-links were specified, only --convert-links will 
 --2026-01-28 16:14:58--  https://distrowatch.com/table.php?distribution=kdeneon
 Resolving distrowatch.com (distrowatch.com)... 82.103.129.71, 2a00:9080:1:58a::1
 Connecting to distrowatch.com (distrowatch.com)|82.103.129.71|:443... connected.
+Both --no-clobber and --convert-links were specified, only --convert-links will be used.
+Both --no-clobber and --convert-links were specified, only --convert-links will be used.
+--2026-01-30 00:47:15--  https://distrowatch.com/table.php?distribution=kdeneon
+--2026-01-30 00:47:16--  https://github.com/meteoritt/gentleman
+Resolving distrowatch.com (distrowatch.com)... Resolving github.com (github.com)... 82.103.129.71, 2a00:9080:1:58a::1
+Connecting to distrowatch.com (distrowatch.com)|82.103.129.71|:443... 140.82.121.3
+Connecting to github.com (github.com)|140.82.121.3|:443... failed: Connection refused.
+Connecting to distrowatch.com (distrowatch.com)|2a00:9080:1:58a::1|:443... failed: Network is unreachable.
+Converted links in 0 files in 0 seconds.
+Request 1/15000
+connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘github.com/meteoritt/gentleman.html’
+
+     0K .......... .......... .......... .......... ..........  234K
+    50K .......... .......... .......... .......... ..........  488K
+   100K .......... .......... .......... .......... .......... 1.09M
+   150K .......... .......... .......... .......... ..........  753K
+   200K .......... .......... .......... .......... .......... 1.51M
+   250K .......... .......... .......... .......... .......... 2.66M
+   300K .......... .......... .......... .......... .......... 2.48M
+   350K .......... .......... .......... .......... .......... 1.28M
+   400K .......... .......... .......... .......... ..........  654K
+   450K .......... .......... .......... .......... .......... 1.92M
+   500K .......... .......... .......... .......... .......... 2.36M
+   550K .......... .......... .......... .......... .......... 1.41M
+   600K .......... .......... .......... .......... .......... 3.32M
+   650K .......... .......... .......... .......... .......... 2.52M
+   700K .......... ........                                    3.21M=0.7s
+
+2026-01-30 00:47:17 (980 KB/s) - ‘github.com/meteoritt/gentleman.html’ saved [735622]
+
+Loading robots.txt; please ignore errors.
+--2026-01-30 00:47:18--  https://camo.githubusercontent.com/robots.txt
+Resolving camo.githubusercontent.com (camo.githubusercontent.com)... 185.199.110.133, 185.199.109.133, 185.199.111.133, ...
+Connecting to camo.githubusercontent.com (camo.githubusercontent.com)|185.199.110.133|:443... connected.
+Both --no-clobber and --convert-links were specified, only --convert-links will be used.
+--2026-01-30 00:47:18--  https://distrowatch.com/table.php?distribution=kdeneon
+Resolving distrowatch.com (distrowatch.com)... 82.103.129.71, 2a00:9080:1:58a::1
+Connecting to distrowatch.com (distrowatch.com)|82.103.129.71|:443... HTTP request sent, awaiting response... failed: Connection refused.
+Connecting to distrowatch.com (distrowatch.com)|2a00:9080:1:58a::1|:443... failed: Network is unreachable.
+Converted links in 0 files in 0 seconds.
+Request 2/15000
+404 Not Found
+2026-01-30 00:47:19 ERROR 404: Not Found.
+
+--2026-01-30 00:47:19--  https://camo.githubusercontent.com/11c3a6b5dc3320254cbf185d39304b434a55b6a1de8bba19c5b6a455f1e85117/68747470733a2f2f76697369746f722d62616467652e6c616f62692e6963752f62616467653f706167655f69643d43535265645261742e67656e746c656d616e
+Reusing existing connection to camo.githubusercontent.com:443.
+HTTP request sent, awaiting response... Both --no-clobber and --convert-links were specified, only --convert-links will be used.
+--2026-01-30 00:47:20--  https://distrowatch.com/table.php?distribution=kdeneon
+Resolving distrowatch.com (distrowatch.com)... 82.103.129.71, 2a00:9080:1:58a::1
+Connecting to distrowatch.com (distrowatch.com)|82.103.129.71|:443... failed: Connection refused.
+Connecting to distrowatch.com (distrowatch.com)|2a00:9080:1:58a::1|:443... failed: Network is unreachable.
+Converted links in 0 files in 0 seconds.
+Request 3/15000
+Both --no-clobber and --convert-links were specified, only --convert-links will be used.
+--2026-01-30 00:47:22--  https://distrowatch.com/table.php?distribution=kdeneon
+Resolving distrowatch.com (distrowatch.com)... 82.103.129.71, 2a00:9080:1:58a::1
+Connecting to distrowatch.com (distrowatch.com)|82.103.129.71|:443... 200 OK
+Length: 1343 (1.3K) [image/svg+xml]
+Saving to: ‘camo.githubusercontent.com/11c3a6b5dc3320254cbf185d39304b434a55b6a1de8bba19c5b6a455f1e85117/68747470733a2f2f76697369746f722d62616467652e6c616f62692e6963752f62616467653f706167655f69643d43535265645261742e67656e746c656d616e’
+
+     0K .                                                     100% 5.50M=0s
+
+2026-01-30 00:47:22 (5.50 MB/s) - ‘camo.githubusercontent.com/11c3a6b5dc3320254cbf185d39304b434a55b6a1de8bba19c5b6a455f1e85117/68747470733a2f2f76697369746f722d62616467652e6c616f62692e6963752f62616467653f706167655f69643d43535265645261742e67656e746c656d616e’ saved [1343/1343]
+
+FINISHED --2026-01-30 00:47:22--
+Total wall clock time: 6.3s
+Downloaded: 2 files, 720K in 0.7s (982 KB/s)
+Converting links in github.com/meteoritt/gentleman.html... 41.
+10-31
+Converted links in 1 files in 0.4 seconds.
+Request 1/15000
+failed: Connection refused.
+Connecting to distrowatch.com (distrowatch.com)|2a00:9080:1:58a::1|:443... failed: Network is unreachable.
+Converted links in 0 files in 0 seconds.
+Request 4/15000
+Both --no-clobber and --convert-links were specified, only --convert-links will be used.
+--2026-01-30 00:47:24--  https://github.com/meteoritt/gentleman
+Resolving github.com (github.com)... 140.82.121.3
+Connecting to github.com (github.com)|140.82.121.3|:443... connected.
+Both --no-clobber and --convert-links were specified, only --convert-links will be used.
+--2026-01-30 00:47:24--  https://distrowatch.com/table.php?distribution=kdeneon
+Resolving distrowatch.com (distrowatch.com)... 82.103.129.71, 2a00:9080:1:58a::1
+Connecting to distrowatch.com (distrowatch.com)|82.103.129.71|:443... HTTP request sent, awaiting response... failed: Connection refused.
+Connecting to distrowatch.com (distrowatch.com)|2a00:9080:1:58a::1|:443... failed: Network is unreachable.
+Converted links in 0 files in 0 seconds.
+Request 5/15000
+200 OK
+Length: unspecified [text/html]
+Saving to: ‘github.com/meteoritt/gentleman.html’
+
+     0K .......... .......... .......... .......... ..........  222K
+    50K .......... .......... .......... .......... ..........  148K
+   100K .......... .......... .......... .......... ..........  615K
+   150K .......... .......... .......... .......... .......... 1.24M
+   200K .......... .......... .......... .......... ..........  723K
+   250K .......... .......... .......... .......... ..........  909K
+   300K .......... .......... .......... .......... ..........  841K
+   350K .......... .......... .......... .......... ..........  249K
+   400K .......... .......... .......... .......... .......... 1.02M
+   450K .......... .......... .......... .......... .......... 1.10M
+   500K .......... .......... .......... .......... .....Both --no-clobber and --convert-links were specified, only --convert-links will be used.
+..--2026-01-30 00:47:26--  https://distrowatch.com/table.php?distribution=kdeneon
+... 1.14M
+   550K .......... ..........Resolving distrowatch.com (distrowatch.com)...  .......... .......... ....82.103.129.71.., .2a00:9080:1:58a::1
+Connecting to distrowatch.com (distrowatch.com)|82.103.129.71|:443... ... 1.55M
+   600K .......... .......... .......... .......... .......... 2.72M
+   650K .......... .......... .......... .......... .......... 3.26M
+   700K .......... ........                                    2.12M=1.3s
+
+2026-01-30 00:47:26 (563 KB/s) - ‘github.com/meteoritt/gentleman.html’ saved [735648]
+
+failed: Connection refused.
+Connecting to distrowatch.com (distrowatch.com)|2a00:9080:1:58a::1|:443... failed: Network is unreachable.
+Converted links in 0 files in 0 seconds.
+Request 6/15000
+Loading robots.txt; please ignore errors.
+--2026-01-30 00:47:27--  https://camo.githubusercontent.com/robots.txt
+Resolving camo.githubusercontent.com (camo.githubusercontent.com)... 185.199.108.133, 185.199.110.133, 185.199.109.133, ...
+Connecting to camo.githubusercontent.com (camo.githubusercontent.com)|185.199.108.133|:443... connected.
+HTTP request sent, awaiting response... 404 Not Found
+2026-01-30 00:47:27 ERROR 404: Not Found.
+
+--2026-01-30 00:47:27--  https://camo.githubusercontent.com/11c3a6b5dc3320254cbf185d39304b434a55b6a1de8bba19c5b6a455f1e85117/68747470733a2f2f76697369746f722d62616467652e6c616f62692e6963752f62616467653f706167655f69643d43535265645261742e67656e746c656d616e
+Reusing existing connection to camo.githubusercontent.com:443.
+HTTP request sent, awaiting response... Both --no-clobber and --convert-links were specified, only --convert-links will be used.
+--2026-01-30 00:47:28--  https://distrowatch.com/table.php?distribution=kdeneon
+Resolving distrowatch.com (distrowatch.com)... 82.103.129.71, 2a00:9080:1:58a::1
+Connecting to distrowatch.com (distrowatch.com)|82.103.129.71|:443... failed: Connection refused.
+Connecting to distrowatch.com (distrowatch.com)|2a00:9080:1:58a::1|:443... failed: Network is unreachable.
+Converted links in 0 files in 0 seconds.
+Request 7/15000
+Both --no-clobber and --convert-links were specified, only --convert-links will be used.
+--2026-01-30 00:47:29--  https://distrowatch.com/table.php?distribution=kdeneon
+Resolving distrowatch.com (distrowatch.com)... 82.103.129.71, 2a00:9080:1:58a::1
+Connecting to distrowatch.com (distrowatch.com)|82.103.129.71|:443... failed: Connection refused.
+Connecting to distrowatch.com (distrowatch.com)|2a00:9080:1:58a::1|:443... failed: Network is unreachable.
+Converted links in 0 files in 0 seconds.
+Request 8/15000
