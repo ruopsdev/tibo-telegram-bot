@@ -56,7 +56,6 @@ PyJWT==2.3.0
 pyparsing==2.4.7
 pyproject_hooks==1.2.0
 pyTelegramBotAPI==4.30.0
-python-apt==2.4.0
 PyYAML==5.4.1
 RapidFuzz==3.14.3
 readme_renderer==44.0
