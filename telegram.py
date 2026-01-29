@@ -20,9 +20,11 @@ import logging
 
 from flask import Flask, request
 
-from teleads.aiogram3 import BapMiddleware
+import teleads
 
-dp.update.middleware(BapMiddleware("meteoritt"))
+# from teleads.aiogram3 import BapMiddleware
+
+# dp.update.middleware(BapMiddleware("meteoritt"))
 
 import telebot
 
@@ -170,8 +172,24 @@ def command_help(m):
     for key in commands:  # generate help text out of the commands dictionary defined at the top
         help_text += "/" + key + " - "
         help_text += commands[key] + "\n"
-    bot.send_message(cid, help_text)  # send the generated help page
-    dp.update.middleware(BapMiddleware("meteoritt"))
+    help_text += "\n--- TeleAds (Bap) ---\n"
+    help_text += "async def main():\n"
+    help_text += "    service = teleads.Bap('<ad provider api key>')\n"
+    help_text += "    # sending telegram update data\n"
+    help_text += "    needHandle = await service.handle_update(\n"
+    help_text += "        {\n"
+    help_text += "            'update_id': 123,\n"
+    help_text += "            # ...\n"
+    help_text += "        }\n"
+    help_text += "    )\n\n"
+    help_text += "    # or if your advertisement mode is set to manual you can mark ad placement in your code by calling:\n"
+    help_text += "    await service.send_advertisement(\n"
+    help_text += "        {\n"
+    help_text += "            'update_id': 123,\n"
+    help_text += "            # ...\n"
+    help_text += "        }\n"
+    help_text += "    )\n"
+    bot.send_message(cid, help_text)
 
 
 default_city = 'Perm'
