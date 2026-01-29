@@ -68,7 +68,7 @@ shellingham==1.5.4
 six==1.16.0
 TeleAds==0.1.7
 tomlkit==0.14.0
-topalias==3.0.0
+topalias==4.3.1
 tqdm==4.67.1
 trove-classifiers==2026.1.14.14
 twine==6.2.0
