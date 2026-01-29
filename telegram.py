@@ -22,8 +22,20 @@ from flask import Flask, request
 
 import teleads
 
+import asyncio
+import sys
+from os import getenv
+
+from aiogram import Bot, Dispatcher, html
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
+from aiogram.filters import CommandStart
+from aiogram.types import Message
+
+from teleads.aiogram3 import BapMiddleware
+
 # from teleads.aiogram3 import BapMiddleware
-from teleads.aiogram2 import BapMiddleware
+# from teleads.aiogram2 import BapMiddleware
 
 # dp.update.middleware(BapMiddleware("meteoritt"))
 
@@ -35,6 +47,8 @@ from telebot import apihelper
 
 # MAIN_URL = f'https://api.telegram.org/bot{TOKEN}'
 TIBO_TELEGRAM_BOT_TOKEN = os.environ['TIBO_TELEGRAM_BOT_TOKEN']
+TOKEN_METEORITT = getenv("BOT_TOKEN", "TIBO_TELEGRAM_BOT_TOKEN")
+METEORITT_ID = getenv("TELEADS_API_KEY", "meteoritt")
 OPEN_WAETHER_MAP_TOKEN = 'e92f4ab649c62931261157c7cf958e1d'
 
 
@@ -137,11 +151,11 @@ bar_members = {
         'first': 'Nikita'
     }
 }
-
-
-# handle the "/start" command
-@bot.message_handler(commands=['start'])
-def command_start(m):
+            
+            
+# handle the "/check" command
+@bot.message_handler(commands=['check'])
+def command_check(m):
     try:
         cid = m.chat.id
         print(f"Command_/start handler triggered! Chat ID: {cid}, Message: {m.text}")
@@ -175,6 +189,7 @@ def command_help(m):
         help_text += commands[key] + "\n"
     bot.send_message(cid, help_text)
     bap.send_advertisement(update)# send the generated help page
+
 
 @bot.message_handler(commands=['promo'])
 async def command_promo(m):
@@ -589,6 +604,37 @@ def before_first_request_func():
     if first_request:
         bot.send_message(41365750, 'Bot started in Render cloud')  # Updated message
         first_request = False
+
+
+dp = Dispatcher()
+dp.update.middleware(BapMiddleware(METEORITT_ID))
+
+@dp.message(CommandStart())
+async def command_start_handler(message: Message) -> None:
+    """
+    This handler receives messages with `/start` command
+    """
+    # Most event objects have aliases for API methods that can be called in events' context
+    # For example if you want to answer to incoming message you can use `message.answer(...)` alias
+    # and the target chat will be passed to :ref:`aiogram.methods.send_message.SendMessage`
+    # method automatically or call API method directly via
+    # Bot instance: `bot.send_message(chat_id=message.chat.id, ...)`
+    await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
+
+
+@dp.message()
+async def echo_handler(message: Message) -> None:
+    """
+    Handler will forward receive a message back to the sender
+
+    By default, message handler will handle all message types (like a text, photo, sticker etc.)
+    """
+    try:
+        # Send a copy of the received message
+        await message.send_copy(chat_id=message.chat.id)
+    except TypeError:
+        # But not all the types is supported to be copied so need to handle it
+        await message.answer("Nice try!")
 
 
 if __name__ == "__main__":
