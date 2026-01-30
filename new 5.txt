@@ -1,0 +1,34 @@
+Traceback (most recent call last):
+  File "/opt/render/project/src/telegram.py", line 169, in command_check
+    command_help(m)  # show the new user the help page
+    ~~~~~~~~~~~~^^^
+  File "/opt/render/project/src/telegram.py", line 192, in command_help
+    bap.send_advertisement(update)# send the generated help page
+	
+Error in command_start: name 'bap' is not defined
+
+
+
+
+
+
+Hello. Please help with my Telegram bot https://t.me/albert_ai_bot
+
+Command:
+
+/start
+/help
+/check
+
+https://github.com/ruopsdev/tibo-telegram-bot/blob/master/telegram.py
+
+
+When you can help me with inegrate code teleads to my Bot: https://t.me/albert_ai_bot
+
+Please help.
+
+https://github.com/ruopsdev/tibo-telegram-bot/blob/master/telegram.py
+
+Instruction: https://github.com/ruopsdev/tibo-telegram-bot
+
+License: https://github.com/ruopsdev/tibo-telegram-bot/wiki/NoBSD-License
