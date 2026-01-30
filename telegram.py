@@ -83,10 +83,25 @@ def listener(messages):
             print(f"Listener: {first_name} [{m.chat.id}]: {m.text}")
 
 
-# TeleBot instance will be created after the `listener` function definition
-# to ensure `listener` is defined before being passed to `set_update_listener()`
+# Middleware to detect command language preference (defined here, registered after bot creation)
+def detect_command_language(bot_instance, message):
+    """Detect which language variant of command user used"""
+    if message.text and message.text.startswith('/'):
+        user_id = message.from_user.id
+        cmd = message.text[1:].split()[0].lower()
+
+        # Check if command is Chinese variant (Pinyin)
+        if cmd in chinese_commands:
+            user_language[user_id] = 'zh'
+            print(f"User {user_id} prefers Chinese (command: /{cmd})")
+        else:
+            user_language[user_id] = 'en'
+            print(f"User {user_id} prefers English (command: /{cmd})")
+
+
 bot = telebot.TeleBot(TIBO_TELEGRAM_BOT_TOKEN, threaded=False)
 bot.set_update_listener(listener)  # register listener
+bot.middleware_handler(update_types=['message'])(detect_command_language)  # register middleware
 print(f"Bot initialized with token: {TIBO_TELEGRAM_BOT_TOKEN[:10]}...")
 STICKERID = "CAACAgIAAxkBAAMbXrPw-PFI1fxdd1PM4gvH4ByBzU8AAqwAA1dPFQieKyFie6ajbxkE"
 
