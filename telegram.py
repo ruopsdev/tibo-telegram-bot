@@ -39,10 +39,6 @@ from aiogram.types import Message
 
 from teleads.aiogram3 import BapMiddleware
 
-# from teleads.aiogram3 import BapMiddleware
-# from teleads.aiogram2 import BapMiddleware
->>>>>>> 24ea71b076317dfe1b831fdbe549ec61c2132b63
-
 # dp.update.middleware(BapMiddleware("meteoritt"))
 
 import telebot
