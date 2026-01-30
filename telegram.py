@@ -685,8 +685,6 @@ def translate_handler(message: Message):
 
     try:
         from googletrans import Translator
-        translator = Translator()
-
         if lang == 'zh':
             msg = bot.reply_to(message,
                 "发送要翻译的文本\n"
