@@ -12,6 +12,8 @@ Open Source Code (СПО): [https://github.com/ruopsdev/tibo-telegram-bot](https
 
 **New to this project?** Check out the [Quick Start Guide (QUICKSTART.md)](QUICKSTART.md) to get running in 5 minutes!
 
+**🇨🇳 Chinese Language Support:** See [CHINESE_SUPPORT.md](CHINESE_SUPPORT.md) for 中文命令和功能
+
 ## Table of Contents
 
 - [Features](#features)
@@ -25,11 +27,14 @@ Open Source Code (СПО): [https://github.com/ruopsdev/tibo-telegram-bot](https
 
 ## Features
 
+- **Multi-language Support:** Chinese (中文), English
 - Weather information via OpenWeatherMap API
 - Random meme generation
 - Sentiment analysis with NLTK
 - Bar notification system
 - Random number generator
+- **Language Detection:** Auto-detect text language (100+ languages)
+- **Translation:** Translate between languages using Google Translate
 - Webhook and polling modes
 - Flask web server with health check endpoints
 
