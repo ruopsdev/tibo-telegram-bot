@@ -42,6 +42,8 @@ from teleads.aiogram3 import BapMiddleware
 
 import telebot
 
+bot = telebot.TeleBot(TOKEN)
+
 from telebot import types
 from telebot.types import Message
 from telebot import apihelper
@@ -68,35 +70,6 @@ headers = {
 }
 # response = requests.post(url, headers=headers)
 # print(response.status_code)
-
-
-def listener(messages):
-    """
-    When new messages arrive TeleBot will call this function.
-    Note: This is called AFTER message handlers, so it won't interfere with processing.
-    """
-    for m in messages:
-        if m.content_type == 'text':
-            # print the sent message to the console
-            first_name = getattr(m.chat, 'first_name', 'Unknown')
-            print(f"Listener: {first_name} [{m.chat.id}]: {m.text}")
-
-
-# Middleware to detect command language preference
-@bot.middleware_handler(update_types=['message'])
-def detect_command_language(bot_instance, message):
-    """Detect which language variant of command user used"""
-    if message.text and message.text.startswith('/'):
-        user_id = message.from_user.id
-        cmd = message.text[1:].split()[0].lower()
-
-        # Check if command is Chinese variant (Pinyin)
-        if cmd in chinese_commands:
-            user_language[user_id] = 'zh'
-            print(f"User {user_id} prefers Chinese (command: /{cmd})")
-        else:
-            user_language[user_id] = 'en'
-            print(f"User {user_id} prefers English (command: /{cmd})")
 
 
 bot = telebot.TeleBot(TIBO_TELEGRAM_BOT_TOKEN, threaded=False)
@@ -189,7 +162,36 @@ bar_members = {
     }
 }
             
-            
+
+def listener(messages):
+    """
+    When new messages arrive TeleBot will call this function.
+    Note: This is called AFTER message handlers, so it won't interfere with processing.
+    """
+    for m in messages:
+        if m.content_type == 'text':
+            # print the sent message to the console
+            first_name = getattr(m.chat, 'first_name', 'Unknown')
+            print(f"Listener: {first_name} [{m.chat.id}]: {m.text}")
+
+
+# Middleware to detect command language preference
+@bot.middleware_handler(update_types=['message'])
+def detect_command_language(bot_instance, message):
+    """Detect which language variant of command user used"""
+    if message.text and message.text.startswith('/'):
+        user_id = message.from_user.id
+        cmd = message.text[1:].split()[0].lower()
+
+        # Check if command is Chinese variant (Pinyin)
+        if cmd in chinese_commands:
+            user_language[user_id] = 'zh'
+            print(f"User {user_id} prefers Chinese (command: /{cmd})")
+        else:
+            user_language[user_id] = 'en'
+            print(f"User {user_id} prefers English (command: /{cmd})")
+
+
 # handle the "/check" command
 @bot.message_handler(commands=['check'])
 def command_check(m):
