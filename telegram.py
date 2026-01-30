@@ -36,16 +36,10 @@ from telebot.types import Message
 
 # import json
 
-
-
-
-
-
 # from teleads.aiogram3 import BapMiddleware
 # from teleads.aiogram2 import BapMiddleware
 
 # dp.update.middleware(BapMiddleware("meteoritt"))
-
 
 
 # MAIN_URL = f'https://api.telegram.org/bot{TOKEN}'
