@@ -81,3 +81,4 @@ zstandard==0.25.0
 aiogram>=3.22,<3.25
 langdetect==1.0.9
 googletrans==4.0.0rc1
+pip>=25.3
