@@ -68,18 +68,10 @@ propcache==0.4.1
 pydantic==2.12.5
 pydantic_core==2.41.5
 Pygments==2.19.2
-<<<<<<< HEAD
-PyGObject==3.42.1
-=======
->>>>>>> 303a4bfd0f432b41f309c76f21920ccde1da05a1
 PyJWT==2.3.0
 pyparsing==2.4.7
 pyproject_hooks==1.2.0
 pyTelegramBotAPI==4.30.0
-<<<<<<< HEAD
-python-apt==2.4.0+ubuntu4.1
-=======
->>>>>>> 303a4bfd0f432b41f309c76f21920ccde1da05a1
 PyYAML==6.0.3
 RapidFuzz==3.14.3
 readme_renderer==44.0
