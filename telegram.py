@@ -526,6 +526,13 @@ def translate_handler(message: Message):
         from googletrans import Translator
         translator = Translator()
 
+        async def translate_text(text, src='auto', dest='en'):
+            translator = Translator()
+            result = await translator.translate(text, src=src, dest=dest)
+            return result
+
+       
+        
         msg = bot.reply_to(message,
             "Send text to translate\n"
             "Format: [target_language] text\n\n"
@@ -534,7 +541,7 @@ def translate_handler(message: Message):
             "zh Hello world\n\n"
             "发送要翻译的文本\n"
             "格式：[目标语言] 文本")
-        bot.register_next_step_handler(msg, lambda m: translate_reply(m, translator))
+        bot.register_next_step_handler(msg, lambda m: translate_reply(m, translate_text))
     except ImportError:
         bot.reply_to(message, "Translation not available. Install googletrans: pip install googletrans==4.0.0rc1")
 
