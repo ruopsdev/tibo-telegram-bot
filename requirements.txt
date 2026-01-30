@@ -91,7 +91,6 @@ trove-classifiers==2026.1.14.14
 twine==6.2.0
 typing-inspection==0.4.2
 typing_extensions==4.15.0
-ubuntu-pro-client==8001
 urllib3==2.6.3
 virtualenv==20.36.1
 wadllib==1.3.6
