@@ -525,14 +525,10 @@ def translate_handler(message: Message):
     try:
         from googletrans import Translator
         translator = Translator()
-
         async def translate_text(text, src='auto', dest='en'):
             translator = Translator()
             result = await translator.translate(text, src=src, dest=dest)
-            return result
-
-       
-        
+            return result  
         msg = bot.reply_to(message,
             "Send text to translate\n"
             "Format: [target_language] text\n\n"
