@@ -96,15 +96,17 @@ knownUsers = []  # todo: save these in a file,
 userStep = {}  # so they won't reset every time the bot restarts
 
 commands = {  # command description used in the "help" command
-    'start': 'Get used to the bot',
-    'help': 'Gives you information about the available commands',
+    'start': 'Get used to the bot / 开始使用机器人',
+    'help': 'Gives you information about the available commands / 获取命令信息',
     'getimage': 'A test using multi-stage messages, custom keyboard, and media sending',
-    'weather': 'OpenWeatherMap data',
-    'погода': 'по-русски',
+    'weather': 'OpenWeatherMap data / 天气信息',
+    '天气': '天气信息',
     'bar': 'GO DRINK',
-    'mem': 'send memories',
+    'mem': 'send memories / 发送图片',
     'meme': 'send memories pi=3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679',
-    'emotion': 'AI @albert_ai_bot love you so much my lifehack' 
+    'emotion': 'AI @albert_ai_bot love you so much my lifehack',
+    'detect': 'Detect language of text / 检测文本语言',
+    'translate': 'Translate text / 翻译文本'
 }
 
 beer_photo = [
@@ -183,7 +185,7 @@ def command_check(m):
 
 
 # handle the "/start" command
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start', '开始'])  # 开始 = start in Chinese
 def command_start(m):
     try:
         cid = m.chat.id
@@ -209,57 +211,43 @@ def command_start(m):
             print(f"Failed to send error message: {send_error}")
 
 
-@bot.message_handler(commands=['help'])
+@bot.message_handler(commands=['help', '帮助'])  # 帮助 = help in Chinese
 def command_help(m):
     cid = m.chat.id
     help_text = "The following commands are available: \n"
     for key in commands:  # generate help text out of the commands dictionary defined at the top
         help_text += "/" + key + " - "
         help_text += commands[key] + "\n"
-<<<<<<< HEAD
-    help_text += "\n--- TeleAds (Bap) ---\n"
-    help_text += "async def main():\n"
-    help_text += "    service = teleads.Bap('<ad provider api key>')\n"
-    help_text += "    # sending telegram update data\n"
-    help_text += "    needHandle = await service.handle_update(\n"
-    help_text += "        {\n"
-    help_text += "            'update_id': 123,\n"
-    help_text += "            # ...\n"
-    help_text += "        }\n"
-    help_text += "    )\n\n"
-    help_text += "    # or if your advertisement mode is set to manual you can mark ad placement in your code by calling:\n"
-    help_text += "    await service.send_advertisement(\n"
-    help_text += "        {\n"
-    help_text += "            'update_id': 123,\n"
-    help_text += "            # ...\n"
-    help_text += "        }\n"
-    help_text += "    )\n"
     bot.send_message(cid, help_text)
-=======
-    bot.send_message(cid, help_text)
-    bap.send_advertisement(update)# send the generated help page
 
 
 @bot.message_handler(commands=['promo'])
-async def command_promo(m):
+def command_promo(m):
+    """Best-effort promo handler: call TeleAds if available, but remain safe."""
     cid = m.chat.id
-    service = teleads.Bap('meteoritt')
-    # sending telegram update data
-    needHandle = await service.handle_update(
-        {
-            'update_id': cid,
-            # ...
-        }
-    )
-    bap.send_advertisement(update)
-
-    # or if your advertisement mode is set to manual you can mark ad placement in your code by calling:
-    await service.send_advertisement(
+    try:
+        service = teleads.Bap(METEORITT_ID)
+        # Best-effort: call advertisement API and ignore errors
+        try:
+            send_ad = getattr(service, "send_advertisement", None)
+            if asyncio.iscoroutinefunction(send_ad):
+                # run coroutine in a fresh event loop (safe for sync handlers)
+                asyncio.run(send_ad({'update_id': cid}))
+            elif callable(send_ad):
+                send_ad({'update_id': cid})
+        except Exception as ex:
+            print(f"Teleads send_advertisement failed: {ex}")
+        bot.send_message(cid, "Promo processed (ad request sent).")
+    except Exception as e:
+        print(f"Error processing promo command: {e}")
+        try:
+            bot.send_message(cid, "Promo failed to process.")
+        except Exception:
+            pass
         {
             'update_id': cid
             # ...
         }
-    )
 
     dp.update.middleware(BapMiddleware("meteoritt"))
 >>>>>>> 24ea71b076317dfe1b831fdbe549ec61c2132b63
@@ -281,7 +269,7 @@ def weather_get(apikey, city):
         return None
 
 
-@bot.message_handler(commands=['weather', 'погода'])
+@bot.message_handler(commands=['weather', '天气'])  # 天气 = weather in Chinese
 def command_weather(message: Message):
     cid = message.chat.id
     command_params = message.text.split()
@@ -300,7 +288,7 @@ def command_weather(message: Message):
                      f'{current_temp} {conditions}, up to {temp_max}, at night {temp_min}')
 
 
-@bot.message_handler(commands=['8', 'eight', 'восемь', 'рандом'])
+@bot.message_handler(commands=['8', 'eight', '随机'])  # 随机 = random in Chinese
 def command_eight(message: Message):
     cid = message.chat.id
     command_params = message.text.split()
@@ -311,7 +299,7 @@ def command_eight(message: Message):
                      f'{chislo}')
 
 
-@bot.message_handler(commands=['3.14', '3', 'three', 'три', 'pi', 'пи'])
+@bot.message_handler(commands=['3.14', '3', 'three', 'pi'])
 def command_pi(message: Message):
     cid = message.chat.id
     command_params = message.text.split()
@@ -349,15 +337,15 @@ def command_bar(message: Message):
     print(push_alert)
     bot.send_message(cid, f'{push_alert} GO BAR', parse_mode="HTML")
     bot.send_poll(cid, 'DRINK BEER SAVE WATER', ["Drink beer", "Discord", "Play computer"], is_anonymous=False)
-    pic_choise = random.randint(0, len(beer_photo))
-    bot.send_photo(cid, beer_photo[pic_choise])
+    pic_choice = random.choice(beer_photo)
+    bot.send_photo(cid, pic_choice)
     # bot.send_poll(cid, 'Poll', {
     #     "Drink beer",
     #     "Play computer"
     # })
 
 
-@bot.message_handler(commands=['mem'])
+@bot.message_handler(commands=['mem', '图片'])  # 图片 = image/picture in Chinese
 def command_mem(message: Message):
     cid = message.chat.id
     r = requests.get("https://api.imgflip.com/get_memes")
@@ -375,7 +363,7 @@ def command_mem(message: Message):
 
 
 # test api
-@bot.message_handler(commands=['getimage', 'image'])
+@bot.message_handler(commands=['getimage', 'image', '获取图片'])  # 获取图片 = get image in Chinese
 def command_image(message: Message):
     cid = message.chat.id
     r = requests.get("https://api.imgflip.com/get_memes")
@@ -427,6 +415,14 @@ def command_help_auth(message):
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 
+# Language detection
+try:
+    from langdetect import detect, DetectorFactory
+    DetectorFactory.seed = 0  # Consistent results
+    LANGDETECT_AVAILABLE = True
+except ImportError:
+    LANGDETECT_AVAILABLE = False
+
 # Lazy initialization of NLTK sentiment analyzer
 _sia = None
 
@@ -474,7 +470,7 @@ def is_positive(message: str) -> str:
         return "🙄"
 
 
-@bot.message_handler(commands=['emotion', 'themes', 'idea', 'more', 'mind', 'context', 'echo', 'bet', 'produce', 'think', 'note', 'tibo', 'agenda', 'graph', 'map', 'push', 'fact', 'top', 'stat', 'game', 'quiz', 'test', 'chat', 'bio', 'date', 'rpg', 'lol', 'notify', 'quote', 'advice', 'contact', 'donate', 'share', 'random', 'schedule', 'settings', 'new'])
+@bot.message_handler(commands=['emotion', 'themes', 'idea', 'more', 'mind', 'context', 'echo', 'bet', 'produce', 'think', 'note', 'tibo', 'agenda', 'graph', 'map', 'push', 'fact', 'top', 'stat', 'game', 'quiz', 'test', 'chat', 'bio', 'date', 'rpg', 'lol', 'notify', 'quote', 'advice', 'contact', 'donate', 'share', 'random', 'schedule', 'settings', 'new', '情感', '分析'])  # 情感 = emotion, 分析 = analysis in Chinese
 def sentiment_handler(message: Message):
     msg = bot.reply_to(message, """\
     Send your text
@@ -488,6 +484,96 @@ def sentiment_handler(message: Message):
 
 def sentiment_reply(message):
     bot.reply_to(message, f'{is_positive(message.text)}')
+
+
+@bot.message_handler(commands=['detect', '检测语言'])  # detect language
+def detect_language_handler(message: Message):
+    """Detect the language of user text"""
+    if not LANGDETECT_AVAILABLE:
+        bot.reply_to(message, "Language detection not available. Install langdetect: pip install langdetect")
+        return
+
+    msg = bot.reply_to(message, "Send me text and I'll detect the language\n发送文字，我会检测语言")
+    bot.register_next_step_handler(msg, detect_language_reply)
+
+
+def detect_language_reply(message):
+    """Reply with detected language"""
+    try:
+        lang_code = detect(message.text)
+
+        # Language names in multiple languages
+        languages = {
+            'en': {'en': 'English', 'zh-cn': '英语'},
+            'zh-cn': {'en': 'Chinese', 'zh-cn': '中文'},
+            'zh-tw': {'en': 'Chinese (Traditional)', 'zh-cn': '中文（繁体）'},
+        }
+
+        lang_info = languages.get(lang_code, {'en': lang_code, 'zh-cn': lang_code})
+
+        response = f"🌐 Detected Language / 检测到的语言:\n\n"
+        response += f"• English: {lang_info['en']}\n"
+        response += f"• 中文: {lang_info['zh-cn']}\n"
+        response += f"\nCode: {lang_code}"
+
+        bot.reply_to(message, response)
+    except Exception as e:
+        bot.reply_to(message, f"Error detecting language: {str(e)}")
+
+
+@bot.message_handler(commands=['translate', '翻译'])
+def translate_handler(message: Message):
+    """Translate text to another language"""
+    try:
+        from googletrans import Translator
+        translator = Translator()
+
+        msg = bot.reply_to(message,
+            "Send text to translate\n"
+            "Format: [target_language] text\n\n"
+            "Examples:\n"
+            "en Hello world\n"
+            "zh Hello world\n\n"
+            "发送要翻译的文本\n"
+            "格式：[目标语言] 文本")
+        bot.register_next_step_handler(msg, lambda m: translate_reply(m, translator))
+    except ImportError:
+        bot.reply_to(message, "Translation not available. Install googletrans: pip install googletrans==4.0.0rc1")
+
+
+def translate_reply(message, translator):
+    """Perform translation"""
+    try:
+        # Parse target language from message
+        parts = message.text.split(None, 1)
+
+        if len(parts) < 2:
+            # No target language specified, auto-detect and translate to English
+            result = translator.translate(message.text, dest='en')
+            response = f"🌐 Translation (auto-detected {result.src} → en):\n\n{result.text}"
+        else:
+            target_lang = parts[0].lower()
+            text_to_translate = parts[1]
+
+            # Map common language codes
+            lang_map = {
+                'chinese': 'zh-cn',
+                '中文': 'zh-cn',
+                'zh': 'zh-cn',
+                'english': 'en',
+                '英语': 'en',
+                'en': 'en'
+            }
+
+            target = lang_map.get(target_lang, target_lang)
+
+            # Translate
+            result = translator.translate(text_to_translate, dest=target)
+            response = f"🌐 Translation ({result.src} → {target}):\n\n{result.text}"
+
+        bot.reply_to(message, response)
+    except Exception as e:
+        bot.reply_to(message, f"Translation error: {str(e)}\n\nUsage: [language] text\nExample: zh Hello")
 
 
 app = Flask(__name__)
