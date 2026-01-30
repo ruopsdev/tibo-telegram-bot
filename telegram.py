@@ -34,12 +34,13 @@ from teleads.aiogram3 import BapMiddleware
 from telebot import apihelper, types
 from telebot.types import Message
 
-# import json
+import json
 
-# from teleads.aiogram3 import BapMiddleware
+from teleads.aiogram3 import BapMiddleware
 # from teleads.aiogram2 import BapMiddleware
 
-# dp.update.middleware(BapMiddleware("meteoritt"))
+dp = Dispatcher()
+dp.update.middleware(BapMiddleware("meteoritt"))
 
 
 # MAIN_URL = f'https://api.telegram.org/bot{TOKEN}'
@@ -1045,10 +1046,6 @@ def before_first_request_func():
     if first_request:
         bot.send_message(41365750, "Bot started in Render cloud")  # Updated message
         first_request = False
-
-
-dp = Dispatcher()
-dp.update.middleware(BapMiddleware(METEORITT_ID))
 
 
 @dp.message(CommandStart())
