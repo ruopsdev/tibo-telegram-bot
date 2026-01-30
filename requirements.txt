@@ -72,7 +72,6 @@ PyJWT==2.3.0
 pyparsing==2.4.7
 pyproject_hooks==1.2.0
 pyTelegramBotAPI==4.30.0
-python-apt==2.4.0+ubuntu4.1
 PyYAML==6.0.3
 RapidFuzz==3.14.3
 readme_renderer==44.0
@@ -84,16 +83,14 @@ rich==14.3.1
 SecretStorage==3.3.1
 shellingham==1.5.4
 six==1.16.0
-systemd-python==234
 TeleAds==0.1.7
 tomlkit==0.14.0
-topalias==3.2.0
+topalias==4.3.1
 tqdm==4.67.1
 trove-classifiers==2026.1.14.14
 twine==6.2.0
 typing-inspection==0.4.2
-typing_extensions==4.15.0
-ubuntu-pro-client==8001
+typing_extensions>=3.6,<5.0
 urllib3==2.6.3
 virtualenv==20.36.1
 wadllib==1.3.6
@@ -101,13 +98,5 @@ Werkzeug==3.1.5
 yarl==1.22.0
 zipp==1.0.0
 zstandard==0.25.0
-<<<<<<< HEAD
-<<<<<<< HEAD
-aiogram>=3.14.0
-=======
-aiogram>=3.22,<3.25
->>>>>>> 24ea71b076317dfe1b831fdbe549ec61c2132b63
-=======
 pip
 deep-translator
->>>>>>> 21ae3f89788e43d12b249bf61634401ad636ddb4
