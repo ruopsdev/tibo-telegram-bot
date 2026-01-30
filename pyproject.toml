@@ -12,7 +12,11 @@ gunicorn = "^23.0.0"
 requests = "^2.32.0"
 Flask-Script = "^2.0.6"
 nltk = "^3.9.0"
+<<<<<<< HEAD
 aiogram = "^2.15.0"
+=======
+aiogram = "^3.14.0"
+>>>>>>> 24ea71b076317dfe1b831fdbe549ec61c2132b63
 
 [tool.poetry.dev-dependencies]
 
