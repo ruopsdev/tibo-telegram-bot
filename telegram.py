@@ -39,6 +39,7 @@ import json
 from teleads.aiogram3 import BapMiddleware
 # from teleads.aiogram2 import BapMiddleware
 
+
 dp = Dispatcher()
 dp.update.middleware(BapMiddleware("meteoritt"))
 
@@ -172,13 +173,11 @@ bar_members = {
 
 
 # Create TeleBot instance now that `listener` is defined.
-telebot_bot = telebot.TeleBot(TIBO_TELEGRAM_BOT_TOKEN, threaded=False)
-telebot_bot.set_update_listener(listener)  # register listener
 print(f"Bot initialized with token: {TIBO_TELEGRAM_BOT_TOKEN[:10]}...")
 
 
 # Middleware to detect command language preference
-@telebot_bot.middleware_handler(update_types=["message"])
+@bot.middleware_handler(update_types=["message"])
 def detect_command_language(bot_instance, message):
     """Detect which language variant of command user used"""
     if message.text and message.text.startswith("/"):
@@ -195,7 +194,7 @@ def detect_command_language(bot_instance, message):
 
 
 # handle the "/check" command
-@telebot_bot.message_handler(commands=["check"])
+@bot.message_handler(commands=["check"])
 def command_check(m):
     try:
         cid = m.chat.id
@@ -208,13 +207,13 @@ def command_check(m):
                 0  # save user id and his current "command level", so he can use the "/getImage" command
             )
             print(f"Sending welcome messages to {cid}")
-            telebot_bot.send_message(cid, "Hello, stranger, let me scan you...")
-            telebot_bot.send_message(cid, "Scanning complete, I know you now")
+            bot.send_message(cid, "Hello, stranger, let me scan you...")
+            bot.send_message(cid, "Scanning complete, I know you now")
             command_help(m)  # show the new user the help page
             print(f"Successfully processed /start for new user {cid}")
         else:
             print(f"User {cid} already known, sending existing user message")
-            telebot_bot.send_message(
+            bot.send_message(
                 cid, "I already know you, no need for me to scan you again!"
             )
     except Exception as e:
@@ -223,7 +222,7 @@ def command_check(m):
 
         traceback.print_exc()
         try:
-            telebot_bot.send_message(
+            bot.send_message(
                 m.chat.id, "Sorry, an error occurred. Please try again."
             )
         except Exception as send_error:
@@ -231,7 +230,7 @@ def command_check(m):
 
 
 # handle the "/start" command
-@telebot_bot.message_handler(
+@bot.message_handler(
     commands=["start", "kaishi"]
 )  # kaishi = 开始 (start in Chinese Pinyin)
 def command_start(m):
@@ -257,8 +256,8 @@ def command_start(m):
                 bot.send_message(cid, "你好，陌生人，让我扫描你...")
                 bot.send_message(cid, "扫描完成，现在我认识你了")
             else:
-                telebot_bot.send_message(cid, "Hello, stranger, let me scan you...")
-                telebot_bot.send_message(cid, "Scanning complete, I know you now")
+                bot.send_message(cid, "Hello, stranger, let me scan you...")
+                bot.send_message(cid, "Scanning complete, I know you now")
 
             command_help(m)  # show the new user the help page
             print(f"Successfully processed /start for new user {cid}")
@@ -267,7 +266,7 @@ def command_start(m):
             if lang == "zh":
                 bot.send_message(cid, "我已经认识你了，不需要再次扫描！")
             else:
-                telebot_bot.send_message(
+                bot.send_message(
                     cid, "I already know you, no need for me to scan you again!"
                 )
     except Exception as e:
@@ -276,14 +275,14 @@ def command_start(m):
 
         traceback.print_exc()
         try:
-            telebot_bot.send_message(
+            bot.send_message(
                 m.chat.id, "Sorry, an error occurred. Please try again."
             )
         except Exception as send_error:
             print(f"Failed to send error message: {send_error}")
 
 
-@telebot_bot.message_handler(
+@bot.message_handler(
     commands=["help", "bangzhu"]
 )  # bangzhu = 帮助 (help in Chinese Pinyin)
 def command_help(m):
@@ -307,10 +306,10 @@ def command_help(m):
             help_text += "/" + key + " - "
             help_text += commands[key] + "\n"
 
-    telebot_bot.send_message(cid, help_text)
+    bot.send_message(cid, help_text)
 
 
-@telebot_bot.message_handler(commands=["promo"])
+@bot.message_handler(commands=["promo"])
 def command_promo(m):
     """Best-effort promo handler: call TeleAds if available, but remain safe."""
     cid = m.chat.id
@@ -326,11 +325,11 @@ def command_promo(m):
                 send_ad({"update_id": cid})
         except Exception as ex:
             print(f"Teleads send_advertisement failed: {ex}")
-        telebot_bot.send_message(cid, "Promo processed (ad request sent).")
+        bot.send_message(cid, "Promo processed (ad request sent).")
     except Exception as e:
         print(f"Error processing promo command: {e}")
         try:
-            telebot_bot.send_message(cid, "Promo failed to process.")
+            bot.send_message(cid, "Promo failed to process.")
         except Exception:
             pass
         {
@@ -359,7 +358,7 @@ def weather_get(apikey, city):
         return None
 
 
-@telebot_bot.message_handler(
+@bot.message_handler(
     commands=["weather", "tianqi", "погода", "天气"]
 )  # tianqi = 天气 (weather in Chinese Pinyin)
 def command_weather(message: Message):
@@ -375,9 +374,9 @@ def command_weather(message: Message):
 
     if weather is None:
         if lang == "zh":
-            telebot_bot.send_message(cid, f"获取 {city} 的天气数据失败")
+            bot.send_message(cid, f"获取 {city} 的天气数据失败")
         else:
-            telebot_bot.send_message(cid, f"Failed to get weather data for {city}")
+            bot.send_message(cid, f"Failed to get weather data for {city}")
         return
 
     conditions = weather["weather"][0]["description"]
@@ -386,18 +385,18 @@ def command_weather(message: Message):
     temp_max = weather["main"]["temp_max"]
 
     if lang == "zh":
-        telebot_bot.send_message(
+        bot.send_message(
             cid,
             f"当前温度 {current_temp}°C，天气 {conditions}\n"
             f"最高温度 {temp_max}°C，最低温度 {temp_min}°C",
         )
     else:
-        telebot_bot.send_message(
+        bot.send_message(
             cid, f"{current_temp} {conditions}, up to {temp_max}, at night {temp_min}"
         )
 
 
-@telebot_bot.message_handler(
+@bot.message_handler(
     commands=["8", "eight", "suiji"]
 )  # suiji = 随机 (random in Chinese Pinyin)
 def command_eight(message: Message):
@@ -409,19 +408,19 @@ def command_eight(message: Message):
     print(chislo)
 
     if lang == "zh":
-        telebot_bot.send_message(cid, f"随机数：{chislo}")
+        bot.send_message(cid, f"随机数：{chislo}")
     else:
-        telebot_bot.send_message(cid, f"{chislo}")
+        bot.send_message(cid, f"{chislo}")
 
 
-@telebot_bot.message_handler(commands=["3.14", "3", "three", "pi", "три", "пи"])
+@bot.message_handler(commands=["3.14", "3", "three", "pi", "три", "пи"])
 def command_pi(message: Message):
     cid = message.chat.id
     command_params = message.text.split()
     pi = math.pi
     print(pi)
-    telebot_bot.send_message(cid, f"{pi}")
-    telebot_bot.send_message(cid, f"{pi}")
+    bot.send_message(cid, f"{pi}")
+    bot.send_message(cid, f"{pi}")
 
 
 def listToString(s):
@@ -432,10 +431,10 @@ def listToString(s):
     return str1.join(s)
 
 
-@telebot_bot.message_handler(commands=["bar"])
+@bot.message_handler(commands=["bar"])
 def command_bar(message: Message):
     cid = message.chat.id
-    chat = telebot_bot.get_chat(message.chat.id)
+    chat = bot.get_chat(message.chat.id)
     mention = []
     for i in bar_members:
         if "username" in bar_members[i]:
@@ -449,22 +448,22 @@ def command_bar(message: Message):
     print(mention)
     push_alert = listToString(mention)
     print(push_alert)
-    telebot_bot.send_message(cid, f"{push_alert} GO BAR", parse_mode="HTML")
-    telebot_bot.send_poll(
+    bot.send_message(cid, f"{push_alert} GO BAR", parse_mode="HTML")
+    bot.send_poll(
         cid,
         "DRINK BEER SAVE WATER",
         ["Drink beer", "Discord", "Play computer"],
         is_anonymous=False,
     )
     pic_choice = random.choice(beer_photo)
-    telebot_bot.send_photo(cid, pic_choice)
+    bot.send_photo(cid, pic_choice)
     # bot.send_poll(cid, 'Poll', {
     #     "Drink beer",
     #     "Play computer"
     # })
 
 
-@telebot_bot.message_handler(
+@bot.message_handler(
     commands=["mem", "tupian"]
 )  # tupian = 图片 (image in Chinese Pinyin)
 def command_mem(message: Message):
@@ -478,11 +477,11 @@ def command_mem(message: Message):
     for i in range(0, count_memes):
         mem.append(json_data["data"]["memes"][i]["url"])
     random.shuffle(mem)
-    telebot_bot.send_photo(cid, mem[0])
+    bot.send_photo(cid, mem[0])
 
 
 # test api
-@telebot_bot.message_handler(
+@bot.message_handler(
     commands=["getimage", "image", "huoqutupian"]
 )  # huoqutupian = 获取图片 (get image in Chinese Pinyin)
 def command_image(message: Message):
@@ -496,10 +495,10 @@ def command_image(message: Message):
     for i in range(0, count_memes):
         image.append(json_data["data"]["memes"][i]["url"])
     random.shuffle(image)
-    telebot_bot.send_photo(cid, image[0])
+    bot.send_photo(cid, image[0])
 
 
-@telebot_bot.message_handler(commands=["meme"])
+@bot.message_handler(commands=["meme"])
 def command_mem(message: Message):
     cid = message.chat.id
     r = requests.get("https://api.imgflip.com/get_memes")
@@ -513,7 +512,7 @@ def command_mem(message: Message):
         meme.append(json_data["data"]["memes"][i]["url"])
         # print(mem[i])
     random.shuffle(meme)
-    telebot_bot.send_photo(cid, meme[0])
+    bot.send_photo(cid, meme[0])
 
 
 @bot.message_handler(commands=["help_auth"])
