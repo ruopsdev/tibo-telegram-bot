@@ -339,7 +339,7 @@ def weather_get(apikey, city):
         return None
 
 
-@bot.message_handler(commands=['weather', 'tianqi'])  # tianqi = 天气 (weather in Chinese Pinyin)
+@telebot_bot.message_handler(commands=['weather', 'tianqi'])  # tianqi = 天气 (weather in Chinese Pinyin)
 def command_weather(message: Message):
     cid = message.chat.id
     user_id = message.from_user.id
@@ -353,9 +353,9 @@ def command_weather(message: Message):
 
     if weather is None:
         if lang == 'zh':
-            bot.send_message(cid, f'获取 {city} 的天气数据失败')
+            telebot_bot.send_message(cid, f'获取 {city} 的天气数据失败')
         else:
-            bot.send_message(cid, f'Failed to get weather data for {city}')
+            telebot_bot.send_message(cid, f'Failed to get weather data for {city}')
         return
 
     conditions = weather['weather'][0]['description']
@@ -364,15 +364,15 @@ def command_weather(message: Message):
     temp_max = weather['main']['temp_max']
 
     if lang == 'zh':
-        bot.send_message(cid,
+        telebot_bot.send_message(cid,
                          f'当前温度 {current_temp}°C，天气 {conditions}\n'
                          f'最高温度 {temp_max}°C，最低温度 {temp_min}°C')
     else:
-        bot.send_message(cid,
+        telebot_bot.send_message(cid,
                          f'{current_temp} {conditions}, up to {temp_max}, at night {temp_min}')
 
 
-@bot.message_handler(commands=['8', 'eight', 'suiji'])  # suiji = 随机 (random in Chinese Pinyin)
+@telebot_bot.message_handler(commands=['8', 'eight', 'suiji'])  # suiji = 随机 (random in Chinese Pinyin)
 def command_eight(message: Message):
     cid = message.chat.id
     user_id = message.from_user.id
@@ -382,19 +382,19 @@ def command_eight(message: Message):
     print(chislo)
 
     if lang == 'zh':
-        bot.send_message(cid, f'随机数：{chislo}')
+        telebot_bot.send_message(cid, f'随机数：{chislo}')
     else:
-        bot.send_message(cid, f'{chislo}')
+        telebot_bot.send_message(cid, f'{chislo}')
 
 
-@bot.message_handler(commands=['3.14', '3', 'three', 'pi', 'три', 'пи'])
+@telebot_bot.message_handler(commands=['3.14', '3', 'three', 'pi', 'три', 'пи'])
 def command_pi(message: Message):
     cid = message.chat.id
     command_params = message.text.split()
     pi = math.pi
     print(pi)
-    bot.send_message(cid, f'{pi}')
-    bot.send_message(cid,
+    telebot_bot.send_message(cid, f'{pi}')
+    telebot_bot.send_message(cid,
                      f'{pi}')
 
 
