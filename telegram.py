@@ -82,6 +82,23 @@ def listener(messages):
             print(f"Listener: {first_name} [{m.chat.id}]: {m.text}")
 
 
+# Middleware to detect command language preference
+@bot.middleware_handler(update_types=['message'])
+def detect_command_language(bot_instance, message):
+    """Detect which language variant of command user used"""
+    if message.text and message.text.startswith('/'):
+        user_id = message.from_user.id
+        cmd = message.text[1:].split()[0].lower()
+
+        # Check if command is Chinese variant (Pinyin)
+        if cmd in chinese_commands:
+            user_language[user_id] = 'zh'
+            print(f"User {user_id} prefers Chinese (command: /{cmd})")
+        else:
+            user_language[user_id] = 'en'
+            print(f"User {user_id} prefers English (command: /{cmd})")
+
+
 bot = telebot.TeleBot(TIBO_TELEGRAM_BOT_TOKEN, threaded=False)
 bot.set_update_listener(listener)  # register listener
 print(f"Bot initialized with token: {TIBO_TELEGRAM_BOT_TOKEN[:10]}...")
@@ -93,20 +110,37 @@ telebot.logger.setLevel(logging.DEBUG)
 
 knownUsers = []  # todo: save these in a file,
 userStep = {}  # so they won't reset every time the bot restarts
+user_language = {}  # Store user language preference: {user_id: 'en' or 'zh'}
 
 commands = {  # command description used in the "help" command
-    'start': 'Get used to the bot / 开始使用机器人',
-    'help': 'Gives you information about the available commands / 获取命令信息',
+    'start': 'Get used to the bot',
+    'help': 'Gives you information about the available commands',
     'getimage': 'A test using multi-stage messages, custom keyboard, and media sending',
-    'weather': 'OpenWeatherMap data / 天气信息',
-    '天气': '天气信息',
+    'weather': 'OpenWeatherMap data',
     'bar': 'GO DRINK',
-    'mem': 'send memories / 发送图片',
-    'meme': 'send memories pi=3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679',
+    'mem': 'send memories',
+    'meme': 'send memories',
     'emotion': 'AI @albert_ai_bot love you so much my lifehack',
-    'detect': 'Detect language of text / 检测文本语言',
-    'translate': 'Translate text / 翻译文本'
+    'detect': 'Detect language of text',
+    'translate': 'Translate text'
 }
+
+commands_zh = {  # Chinese command descriptions
+    'kaishi': '开始使用机器人',
+    'bangzhu': '获取可用命令信息',
+    'huoqutupian': '获取随机图片',
+    'tianqi': '查询天气信息',
+    'tupian': '发送图片',
+    'qinggan': '情感分析',
+    'fenxi': '文本分析',
+    'jianceyu': '检测文本语言',
+    'fanyi': '翻译文本',
+    'suiji': '生成随机数'
+}
+
+# Chinese command mapping to detect language preference
+chinese_commands = ['kaishi', 'bangzhu', 'tianqi', 'suiji', 'tupian',
+                   'huoqutupian', 'qinggan', 'fenxi', 'jianceyu', 'fanyi']
 
 beer_photo = [
     "https://img1.thelist.com/img/gallery/what-happens-to-your-body-when-you-drink-beer-every-night/intro-1577191347.jpg",
@@ -184,22 +218,35 @@ def command_check(m):
 
 
 # handle the "/start" command
-@bot.message_handler(commands=['start', '开始'])  # 开始 = start in Chinese
+@bot.message_handler(commands=['start', 'kaishi'])  # kaishi = 开始 (start in Chinese Pinyin)
 def command_start(m):
     try:
         cid = m.chat.id
-        print(f"Command_/start handler triggered! Chat ID: {cid}, Message: {m.text}")
+        user_id = m.from_user.id
+        lang = user_language.get(user_id, 'en')
+
+        print(f"Command_/start handler triggered! Chat ID: {cid}, Message: {m.text}, Language: {lang}")
+
         if cid not in knownUsers:  # if user hasn't used the "/start" command yet:
             knownUsers.append(cid)  # save user id, so you could brodcast messages to all users of this bot later
             userStep[cid] = 0  # save user id and his current "command level", so he can use the "/getImage" command
             print(f"Sending welcome messages to {cid}")
-            bot.send_message(cid, "Hello, stranger, let me scan you...")
-            bot.send_message(cid, "Scanning complete, I know you now")
+
+            if lang == 'zh':
+                bot.send_message(cid, "你好，陌生人，让我扫描你...")
+                bot.send_message(cid, "扫描完成，现在我认识你了")
+            else:
+                bot.send_message(cid, "Hello, stranger, let me scan you...")
+                bot.send_message(cid, "Scanning complete, I know you now")
+
             command_help(m)  # show the new user the help page
             print(f"Successfully processed /start for new user {cid}")
         else:
             print(f"User {cid} already known, sending existing user message")
-            bot.send_message(cid, "I already know you, no need for me to scan you again!")
+            if lang == 'zh':
+                bot.send_message(cid, "我已经认识你了，不需要再次扫描！")
+            else:
+                bot.send_message(cid, "I already know you, no need for me to scan you again!")
     except Exception as e:
         print(f"Error in command_start: {e}")
         import traceback
@@ -210,13 +257,28 @@ def command_start(m):
             print(f"Failed to send error message: {send_error}")
 
 
-@bot.message_handler(commands=['help', '帮助'])  # 帮助 = help in Chinese
+@bot.message_handler(commands=['help', 'bangzhu'])  # bangzhu = 帮助 (help in Chinese Pinyin)
 def command_help(m):
     cid = m.chat.id
-    help_text = "The following commands are available: \n"
-    for key in commands:  # generate help text out of the commands dictionary defined at the top
-        help_text += "/" + key + " - "
-        help_text += commands[key] + "\n"
+    user_id = m.from_user.id
+    lang = user_language.get(user_id, 'en')
+
+    if lang == 'zh':
+        help_text = "可用命令列表：\n\n"
+        help_text += "/kaishi - 开始使用机器人\n"
+        help_text += "/bangzhu - 获取帮助信息\n"
+        help_text += "/tianqi [城市] - 查询天气\n"
+        help_text += "/suiji - 生成随机数 (1-100)\n"
+        help_text += "/tupian - 获取随机图片\n"
+        help_text += "/qinggan - 情感分析\n"
+        help_text += "/jianceyu - 检测文本语言\n"
+        help_text += "/fanyi - 翻译文本\n"
+    else:
+        help_text = "The following commands are available:\n\n"
+        for key in commands:
+            help_text += "/" + key + " - "
+            help_text += commands[key] + "\n"
+
     bot.send_message(cid, help_text)
 
 
@@ -267,34 +329,52 @@ def weather_get(apikey, city):
         return None
 
 
-@bot.message_handler(commands=['weather', '天气'])  # 天气 = weather in Chinese
+@bot.message_handler(commands=['weather', 'tianqi'])  # tianqi = 天气 (weather in Chinese Pinyin)
 def command_weather(message: Message):
     cid = message.chat.id
+    user_id = message.from_user.id
+    lang = user_language.get(user_id, 'en')
+
     command_params = message.text.split()
     params_count = len(command_params)
     city = command_params[1] if params_count > 1 else default_city
     weather = weather_get(OPEN_WAETHER_MAP_TOKEN, city)
     print(weather)
+
     if weather is None:
-        bot.send_message(cid, f'Failed to get weather data for {city}')
+        if lang == 'zh':
+            bot.send_message(cid, f'获取 {city} 的天气数据失败')
+        else:
+            bot.send_message(cid, f'Failed to get weather data for {city}')
         return
+
     conditions = weather['weather'][0]['description']
     current_temp = weather['main']['temp']
     temp_min = weather['main']['temp_min']
     temp_max = weather['main']['temp_max']
-    bot.send_message(cid,
-                     f'{current_temp} {conditions}, up to {temp_max}, at night {temp_min}')
+
+    if lang == 'zh':
+        bot.send_message(cid,
+                         f'当前温度 {current_temp}°C，天气 {conditions}\n'
+                         f'最高温度 {temp_max}°C，最低温度 {temp_min}°C')
+    else:
+        bot.send_message(cid,
+                         f'{current_temp} {conditions}, up to {temp_max}, at night {temp_min}')
 
 
-@bot.message_handler(commands=['8', 'eight', '随机'])  # 随机 = random in Chinese
+@bot.message_handler(commands=['8', 'eight', 'suiji'])  # suiji = 随机 (random in Chinese Pinyin)
 def command_eight(message: Message):
     cid = message.chat.id
-    command_params = message.text.split()
+    user_id = message.from_user.id
+    lang = user_language.get(user_id, 'en')
+
     chislo = random.randint(1, 100)
     print(chislo)
-    bot.send_message(cid, f'{chislo}')
-    bot.send_message(cid,
-                     f'{chislo}')
+
+    if lang == 'zh':
+        bot.send_message(cid, f'随机数：{chislo}')
+    else:
+        bot.send_message(cid, f'{chislo}')
 
 
 @bot.message_handler(commands=['3.14', '3', 'three', 'pi'])
@@ -343,37 +423,33 @@ def command_bar(message: Message):
     # })
 
 
-@bot.message_handler(commands=['mem', '图片'])  # 图片 = image/picture in Chinese
+@bot.message_handler(commands=['mem', 'tupian'])  # tupian = 图片 (image in Chinese Pinyin)
 def command_mem(message: Message):
     cid = message.chat.id
     r = requests.get("https://api.imgflip.com/get_memes")
     print(r.content)
     json_data = r.json()
     list_mem = json_data['data']['memes']
-    # print(list_mem)
     count_memes = len(list_mem)
     mem = []
     for i in range(0, count_memes):
         mem.append(json_data['data']['memes'][i]['url'])
-        # print(mem[i])
     random.shuffle(mem)
     bot.send_photo(cid, mem[0])
 
 
 # test api
-@bot.message_handler(commands=['getimage', 'image', '获取图片'])  # 获取图片 = get image in Chinese
+@bot.message_handler(commands=['getimage', 'image', 'huoqutupian'])  # huoqutupian = 获取图片 (get image in Chinese Pinyin)
 def command_image(message: Message):
     cid = message.chat.id
     r = requests.get("https://api.imgflip.com/get_memes")
     print(r.content)
     json_data = r.json()
     list_mem = json_data['data']['memes']
-    # print(list_mem)
     count_memes = len(list_mem)
     image = []
     for i in range(0, count_memes):
         image.append(json_data['data']['memes'][i]['url'])
-        # print(image[i])
     random.shuffle(image)
     bot.send_photo(cid, image[0])
 
@@ -420,6 +496,29 @@ try:
     LANGDETECT_AVAILABLE = True
 except ImportError:
     LANGDETECT_AVAILABLE = False
+
+
+def contains_chinese(text):
+    """Check if text contains Chinese characters"""
+    for char in text:
+        if '\u4e00' <= char <= '\u9fff':
+            return True
+    return False
+
+
+# Chinese keyword mapping (without slash)
+chinese_keywords = {
+    '帮助': 'help',
+    '开始': 'start',
+    '天气': 'weather',
+    '随机': 'random',
+    '图片': 'image',
+    '获取图片': 'getimage',
+    '情感': 'emotion',
+    '分析': 'emotion',
+    '检测语言': 'detect',
+    '翻译': 'translate'
+}
 
 # Lazy initialization of NLTK sentiment analyzer
 _sia = None
@@ -468,11 +567,16 @@ def is_positive(message: str) -> str:
         return "🙄"
 
 
-@bot.message_handler(commands=['emotion', 'themes', 'idea', 'more', 'mind', 'context', 'echo', 'bet', 'produce', 'think', 'note', 'tibo', 'agenda', 'graph', 'map', 'push', 'fact', 'top', 'stat', 'game', 'quiz', 'test', 'chat', 'bio', 'date', 'rpg', 'lol', 'notify', 'quote', 'advice', 'contact', 'donate', 'share', 'random', 'schedule', 'settings', 'new', '情感', '分析'])  # 情感 = emotion, 分析 = analysis in Chinese
+@bot.message_handler(commands=['emotion', 'themes', 'idea', 'more', 'mind', 'context', 'echo', 'bet', 'produce', 'think', 'note', 'tibo', 'agenda', 'graph', 'map', 'push', 'fact', 'top', 'stat', 'game', 'quiz', 'test', 'chat', 'bio', 'date', 'rpg', 'lol', 'notify', 'quote', 'advice', 'contact', 'donate', 'share', 'random', 'schedule', 'settings', 'new', 'qinggan', 'fenxi'])  # qinggan = 情感 (emotion), fenxi = 分析 (analysis) in Chinese Pinyin
 def sentiment_handler(message: Message):
-    msg = bot.reply_to(message, """\
-    Send your text
-    """)
+    user_id = message.from_user.id
+    lang = user_language.get(user_id, 'en')
+
+    if lang == 'zh':
+        msg = bot.reply_to(message, "请发送要分析的文本")
+    else:
+        msg = bot.reply_to(message, "Send your text")
+
     bot.register_next_step_handler(msg, sentiment_reply)
     # bot.send_message(
     #     message.chat.id,
@@ -484,14 +588,68 @@ def sentiment_reply(message):
     bot.reply_to(message, f'{is_positive(message.text)}')
 
 
-@bot.message_handler(commands=['detect', '检测语言'])  # detect language
+# Chinese keyword detection handler (messages without /)
+@bot.message_handler(func=lambda m: m.text and not m.text.startswith('/') and contains_chinese(m.text))
+def handle_chinese_keywords(message):
+    """Detect Chinese keywords and route to appropriate handler"""
+    text = message.text.strip()
+    user_id = message.from_user.id
+
+    # Set language preference to Chinese
+    user_language[user_id] = 'zh'
+
+    # Check if text starts with a known Chinese keyword
+    for chinese_keyword, english_command in chinese_keywords.items():
+        if text.startswith(chinese_keyword):
+            # Extract any parameters after the keyword
+            params = text[len(chinese_keyword):].strip()
+
+            # Create a fake command message to route to existing handlers
+            if english_command == 'help':
+                command_help(message)
+            elif english_command == 'start':
+                command_start(message)
+            elif english_command == 'weather':
+                # Modify message text to include command format
+                modified_text = f"/weather {params}" if params else "/weather"
+                message.text = modified_text
+                command_weather(message)
+            elif english_command == 'random':
+                command_eight(message)
+            elif english_command == 'image':
+                command_mem(message)
+            elif english_command == 'getimage':
+                command_image(message)
+            elif english_command == 'emotion':
+                sentiment_handler(message)
+            elif english_command == 'detect':
+                detect_language_handler(message)
+            elif english_command == 'translate':
+                translate_handler(message)
+            return
+
+    # If no keyword matched but contains Chinese, could be for sentiment analysis or other processing
+    # Just let it pass through to other handlers
+
+
+@bot.message_handler(commands=['detect', 'jianceyu'])  # jianceyu = 检测语言 (detect language in Chinese Pinyin)
 def detect_language_handler(message: Message):
     """Detect the language of user text"""
+    user_id = message.from_user.id
+    lang = user_language.get(user_id, 'en')
+
     if not LANGDETECT_AVAILABLE:
-        bot.reply_to(message, "Language detection not available. Install langdetect: pip install langdetect")
+        if lang == 'zh':
+            bot.reply_to(message, "语言检测功能不可用。请安装：pip install langdetect")
+        else:
+            bot.reply_to(message, "Language detection not available. Install langdetect: pip install langdetect")
         return
 
-    msg = bot.reply_to(message, "Send me text and I'll detect the language\n发送文字，我会检测语言")
+    if lang == 'zh':
+        msg = bot.reply_to(message, "请发送文字，我会检测语言")
+    else:
+        msg = bot.reply_to(message, "Send me text and I'll detect the language")
+
     bot.register_next_step_handler(msg, detect_language_reply)
 
 
@@ -519,24 +677,37 @@ def detect_language_reply(message):
         bot.reply_to(message, f"Error detecting language: {str(e)}")
 
 
-@bot.message_handler(commands=['translate', '翻译'])
+@bot.message_handler(commands=['translate', 'fanyi'])  # fanyi = 翻译 (translate in Chinese Pinyin)
 def translate_handler(message: Message):
     """Translate text to another language"""
+    user_id = message.from_user.id
+    lang = user_language.get(user_id, 'en')
+
     try:
         from googletrans import Translator
         translator = Translator()
 
-        msg = bot.reply_to(message,
-            "Send text to translate\n"
-            "Format: [target_language] text\n\n"
-            "Examples:\n"
-            "en Hello world\n"
-            "zh Hello world\n\n"
-            "发送要翻译的文本\n"
-            "格式：[目标语言] 文本")
+        if lang == 'zh':
+            msg = bot.reply_to(message,
+                "发送要翻译的文本\n"
+                "格式：[目标语言] 文本\n\n"
+                "示例：\n"
+                "en 你好世界\n"
+                "zh Hello world")
+        else:
+            msg = bot.reply_to(message,
+                "Send text to translate\n"
+                "Format: [target_language] text\n\n"
+                "Examples:\n"
+                "en Hello world\n"
+                "zh Hello world")
+
         bot.register_next_step_handler(msg, lambda m: translate_reply(m, translator))
     except ImportError:
-        bot.reply_to(message, "Translation not available. Install googletrans: pip install googletrans==4.0.0rc1")
+        if lang == 'zh':
+            bot.reply_to(message, "翻译功能不可用。请安装：pip install googletrans==4.0.0rc1")
+        else:
+            bot.reply_to(message, "Translation not available. Install googletrans: pip install googletrans==4.0.0rc1")
 
 
 def translate_reply(message, translator):
