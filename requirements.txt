@@ -5,6 +5,7 @@ aiohttp==3.13.3
 aiosignal==1.4.0
 annotated-types==0.7.0
 anyio==4.12.1
+asyncio
 attrs==25.4.0
 blinker==1.9.0
 build==1.4.0
