@@ -359,7 +359,7 @@ def weather_get(apikey, city):
 
 
 @telebot_bot.message_handler(
-    commands=["weather", "tianqi"]
+    commands=["weather", "tianqi", "погода", "天气"]
 )  # tianqi = 天气 (weather in Chinese Pinyin)
 def command_weather(message: Message):
     cid = message.chat.id
@@ -772,7 +772,7 @@ def detect_language_reply(message):
 
 
 @bot.message_handler(
-    commands=["translate", "fanyi"]
+    commands=["translate", "fanyi", '翻译']
 )  # fanyi = 翻译 (translate in Chinese Pinyin)
 def translate_handler(message: Message):
     """Translate text to another language"""
