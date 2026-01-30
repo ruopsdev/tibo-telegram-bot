@@ -355,6 +355,18 @@ Sign (Подпись): стерхов 你會說中文嗎？- ни хуу шуа 
 
 Я автор книги про Linux: https://github.com/meteoritt/gentleman (если надо настроить домашний компьютер на Windows с WSL – Windows Subsystem Linux под выполнение пет-проджектов, хобби, проектов)
 
+# StratUp
+
+```
+curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3 get-pip.py
+python3 -m ensurepip --upgrade
+python3 -m pip --upgrade pip
+pip3 install poetry
+python3 -m pip install poetry
+python3 -m poetry install
+```
+
 # License
 
 [NoBSD](https://github.com/ruopsdev/tibo-telegram-bot/wiki/NoBSD-License): [https://github.com/ruopsdev/tibo-telegram-bot/wiki/NoBSD-License](https://github.com/ruopsdev/tibo-telegram-bot/wiki/NoBSD-License)
