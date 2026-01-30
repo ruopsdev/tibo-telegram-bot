@@ -42,8 +42,6 @@ from teleads.aiogram3 import BapMiddleware
 
 import telebot
 
-bot = telebot.TeleBot(TOKEN)
-
 from telebot import types
 from telebot.types import Message
 from telebot import apihelper
@@ -53,6 +51,8 @@ TIBO_TELEGRAM_BOT_TOKEN = os.environ['TIBO_TELEGRAM_BOT_TOKEN']
 TOKEN_METEORITT = getenv("BOT_TOKEN", "TIBO_TELEGRAM_BOT_TOKEN")
 METEORITT_ID = getenv("TELEADS_API_KEY", "meteoritt")
 OPEN_WAETHER_MAP_TOKEN = 'e92f4ab649c62931261157c7cf958e1d'
+
+# bot = telebot.TeleBot(TIBO_TELEGRAM_BOT_TOKEN)
 
 
 # TIMEZONE = 'Asia/Yekaterinburg'
