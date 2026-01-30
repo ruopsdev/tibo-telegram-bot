@@ -71,7 +71,19 @@ headers = {
 # response = requests.post(url, headers=headers)
 # print(response.status_code)
 
+def listener(messages):
+    """
+    When new messages arrive TeleBot will call this function.
+    Note: This is called AFTER message handlers, so it won't interfere with processing.
+    """
+    for m in messages:
+        if m.content_type == 'text':
+            # print the sent message to the console
+            first_name = getattr(m.chat, 'first_name', 'Unknown')
+            print(f"Listener: {first_name} [{m.chat.id}]: {m.text}")
 
+# TeleBot instance will be created after the `listener` function definition
+# to ensure `listener` is defined before being passed to `set_update_listener()`
 bot = telebot.TeleBot(TIBO_TELEGRAM_BOT_TOKEN, threaded=False)
 bot.set_update_listener(listener)  # register listener
 print(f"Bot initialized with token: {TIBO_TELEGRAM_BOT_TOKEN[:10]}...")
@@ -90,6 +102,7 @@ commands = {  # command description used in the "help" command
     'help': 'Gives you information about the available commands',
     'getimage': 'A test using multi-stage messages, custom keyboard, and media sending',
     'weather': 'OpenWeatherMap data',
+    'погода': 'по-русски',
     'bar': 'GO DRINK',
     'mem': 'send memories',
     'meme': 'send memories',
@@ -163,20 +176,15 @@ bar_members = {
 }
             
 
-def listener(messages):
-    """
-    When new messages arrive TeleBot will call this function.
-    Note: This is called AFTER message handlers, so it won't interfere with processing.
-    """
-    for m in messages:
-        if m.content_type == 'text':
-            # print the sent message to the console
-            first_name = getattr(m.chat, 'first_name', 'Unknown')
-            print(f"Listener: {first_name} [{m.chat.id}]: {m.text}")
+
+# Create TeleBot instance now that `listener` is defined.
+telebot_bot = telebot.TeleBot(TIBO_TELEGRAM_BOT_TOKEN, threaded=False)
+telebot_bot.set_update_listener(listener)  # register listener
+print(f"Bot initialized with token: {TIBO_TELEGRAM_BOT_TOKEN[:10]}...")
 
 
 # Middleware to detect command language preference
-@bot.middleware_handler(update_types=['message'])
+@telebot_bot.middleware_handler(update_types=['message'])
 def detect_command_language(bot_instance, message):
     """Detect which language variant of command user used"""
     if message.text and message.text.startswith('/'):
@@ -193,7 +201,7 @@ def detect_command_language(bot_instance, message):
 
 
 # handle the "/check" command
-@bot.message_handler(commands=['check'])
+@telebot_bot.message_handler(commands=['check'])
 def command_check(m):
     try:
         cid = m.chat.id
@@ -202,25 +210,25 @@ def command_check(m):
             knownUsers.append(cid)  # save user id, so you could brodcast messages to all users of this bot later
             userStep[cid] = 0  # save user id and his current "command level", so he can use the "/getImage" command
             print(f"Sending welcome messages to {cid}")
-            bot.send_message(cid, "Hello, stranger, let me scan you...")
-            bot.send_message(cid, "Scanning complete, I know you now")
+            telebot_bot.send_message(cid, "Hello, stranger, let me scan you...")
+            telebot_bot.send_message(cid, "Scanning complete, I know you now")
             command_help(m)  # show the new user the help page
             print(f"Successfully processed /start for new user {cid}")
         else:
             print(f"User {cid} already known, sending existing user message")
-            bot.send_message(cid, "I already know you, no need for me to scan you again!")
+            telebot_bot.send_message(cid, "I already know you, no need for me to scan you again!")
     except Exception as e:
         print(f"Error in command_start: {e}")
         import traceback
         traceback.print_exc()
         try:
-            bot.send_message(m.chat.id, "Sorry, an error occurred. Please try again.")
+            telebot_bot.send_message(m.chat.id, "Sorry, an error occurred. Please try again.")
         except Exception as send_error:
             print(f"Failed to send error message: {send_error}")
 
 
 # handle the "/start" command
-@bot.message_handler(commands=['start', 'kaishi'])  # kaishi = 开始 (start in Chinese Pinyin)
+@telebot_bot.message_handler(commands=['start', 'kaishi'])  # kaishi = 开始 (start in Chinese Pinyin)
 def command_start(m):
     try:
         cid = m.chat.id
@@ -238,8 +246,8 @@ def command_start(m):
                 bot.send_message(cid, "你好，陌生人，让我扫描你...")
                 bot.send_message(cid, "扫描完成，现在我认识你了")
             else:
-                bot.send_message(cid, "Hello, stranger, let me scan you...")
-                bot.send_message(cid, "Scanning complete, I know you now")
+                telebot_bot.send_message(cid, "Hello, stranger, let me scan you...")
+                telebot_bot.send_message(cid, "Scanning complete, I know you now")
 
             command_help(m)  # show the new user the help page
             print(f"Successfully processed /start for new user {cid}")
@@ -248,18 +256,18 @@ def command_start(m):
             if lang == 'zh':
                 bot.send_message(cid, "我已经认识你了，不需要再次扫描！")
             else:
-                bot.send_message(cid, "I already know you, no need for me to scan you again!")
+                telebot_bot.send_message(cid, "I already know you, no need for me to scan you again!")
     except Exception as e:
         print(f"Error in command_start: {e}")
         import traceback
         traceback.print_exc()
         try:
-            bot.send_message(m.chat.id, "Sorry, an error occurred. Please try again.")
+            telebot_bot.send_message(m.chat.id, "Sorry, an error occurred. Please try again.")
         except Exception as send_error:
             print(f"Failed to send error message: {send_error}")
 
 
-@bot.message_handler(commands=['help', 'bangzhu'])  # bangzhu = 帮助 (help in Chinese Pinyin)
+@telebot_bot.message_handler(commands=['help', 'bangzhu'])  # bangzhu = 帮助 (help in Chinese Pinyin)
 def command_help(m):
     cid = m.chat.id
     user_id = m.from_user.id
@@ -281,10 +289,10 @@ def command_help(m):
             help_text += "/" + key + " - "
             help_text += commands[key] + "\n"
 
-    bot.send_message(cid, help_text)
+    telebot_bot.send_message(cid, help_text)
 
 
-@bot.message_handler(commands=['promo'])
+@telebot_bot.message_handler(commands=['promo'])
 def command_promo(m):
     """Best-effort promo handler: call TeleAds if available, but remain safe."""
     cid = m.chat.id
@@ -300,11 +308,11 @@ def command_promo(m):
                 send_ad({'update_id': cid})
         except Exception as ex:
             print(f"Teleads send_advertisement failed: {ex}")
-        bot.send_message(cid, "Promo processed (ad request sent).")
+        telebot_bot.send_message(cid, "Promo processed (ad request sent).")
     except Exception as e:
         print(f"Error processing promo command: {e}")
         try:
-            bot.send_message(cid, "Promo failed to process.")
+            telebot_bot.send_message(cid, "Promo failed to process.")
         except Exception:
             pass
         {
@@ -379,7 +387,7 @@ def command_eight(message: Message):
         bot.send_message(cid, f'{chislo}')
 
 
-@bot.message_handler(commands=['3.14', '3', 'three', 'pi'])
+@bot.message_handler(commands=['3.14', '3', 'three', 'pi', 'три', 'пи'])
 def command_pi(message: Message):
     cid = message.chat.id
     command_params = message.text.split()
