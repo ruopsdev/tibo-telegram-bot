@@ -83,7 +83,6 @@ rich==14.3.1
 SecretStorage==3.3.1
 shellingham==1.5.4
 six==1.16.0
-systemd-python==234
 TeleAds==0.1.7
 tomlkit==0.14.0
 topalias==3.2.0
