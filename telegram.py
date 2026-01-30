@@ -64,6 +64,10 @@ headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/js
 # response = requests.post(url, headers=headers)
 # print(response.status_code)
 
+from telebot import apihelper
+
+apihelper.ENABLE_MIDDLEWARE = True  # Must be before TeleBot init
+
 
 def listener(messages):
     """
@@ -427,10 +431,10 @@ def listToString(s):
     return str1.join(s)
 
 
-@bot.message_handler(commands=["bar"])
+@telebot_bot.message_handler(commands=["bar"])
 def command_bar(message: Message):
     cid = message.chat.id
-    chat = bot.get_chat(message.chat.id)
+    chat = telebot_bot.get_chat(message.chat.id)
     mention = []
     for i in bar_members:
         if "username" in bar_members[i]:
@@ -444,22 +448,22 @@ def command_bar(message: Message):
     print(mention)
     push_alert = listToString(mention)
     print(push_alert)
-    bot.send_message(cid, f"{push_alert} GO BAR", parse_mode="HTML")
-    bot.send_poll(
+    telebot_bot.send_message(cid, f"{push_alert} GO BAR", parse_mode="HTML")
+    telebot_bot.send_poll(
         cid,
         "DRINK BEER SAVE WATER",
         ["Drink beer", "Discord", "Play computer"],
         is_anonymous=False,
     )
     pic_choice = random.choice(beer_photo)
-    bot.send_photo(cid, pic_choice)
+    telebot_bot.send_photo(cid, pic_choice)
     # bot.send_poll(cid, 'Poll', {
     #     "Drink beer",
     #     "Play computer"
     # })
 
 
-@bot.message_handler(
+@telebot_bot.message_handler(
     commands=["mem", "tupian"]
 )  # tupian = 图片 (image in Chinese Pinyin)
 def command_mem(message: Message):
@@ -473,11 +477,11 @@ def command_mem(message: Message):
     for i in range(0, count_memes):
         mem.append(json_data["data"]["memes"][i]["url"])
     random.shuffle(mem)
-    bot.send_photo(cid, mem[0])
+    telebot_bot.send_photo(cid, mem[0])
 
 
 # test api
-@bot.message_handler(
+@telebot_bot.message_handler(
     commands=["getimage", "image", "huoqutupian"]
 )  # huoqutupian = 获取图片 (get image in Chinese Pinyin)
 def command_image(message: Message):
@@ -491,10 +495,10 @@ def command_image(message: Message):
     for i in range(0, count_memes):
         image.append(json_data["data"]["memes"][i]["url"])
     random.shuffle(image)
-    bot.send_photo(cid, image[0])
+    telebot_bot.send_photo(cid, image[0])
 
 
-@bot.message_handler(commands=["meme"])
+@telebot_bot.message_handler(commands=["meme"])
 def command_mem(message: Message):
     cid = message.chat.id
     r = requests.get("https://api.imgflip.com/get_memes")
@@ -508,7 +512,7 @@ def command_mem(message: Message):
         meme.append(json_data["data"]["memes"][i]["url"])
         # print(mem[i])
     random.shuffle(meme)
-    bot.send_photo(cid, meme[0])
+    telebot_bot.send_photo(cid, meme[0])
 
 
 @bot.message_handler(commands=["help_auth"])
