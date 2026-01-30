@@ -216,24 +216,31 @@ def command_help(m):
         help_text += "/" + key + " - "
         help_text += commands[key] + "\n"
     bot.send_message(cid, help_text)
-    bap.send_advertisement(update)# send the generated help page
 
 
 @bot.message_handler(commands=['promo'])
-async def command_promo(m):
+def command_promo(m):
+    """Best-effort promo handler: call TeleAds if available, but remain safe."""
     cid = m.chat.id
-    service = teleads.Bap('meteoritt')
-    # sending telegram update data
-    needHandle = await service.handle_update(
-        {
-            'update_id': cid,
-            # ...
-        }
-    )
-    bap.send_advertisement(update)
-
-    # or if your advertisement mode is set to manual you can mark ad placement in your code by calling:
-    await service.send_advertisement(
+    try:
+        service = teleads.Bap(METEORITT_ID)
+        # Best-effort: call advertisement API and ignore errors
+        try:
+            send_ad = getattr(service, "send_advertisement", None)
+            if asyncio.iscoroutinefunction(send_ad):
+                # run coroutine in a fresh event loop (safe for sync handlers)
+                asyncio.run(send_ad({'update_id': cid}))
+            elif callable(send_ad):
+                send_ad({'update_id': cid})
+        except Exception as ex:
+            print(f"Teleads send_advertisement failed: {ex}")
+        bot.send_message(cid, "Promo processed (ad request sent).")
+    except Exception as e:
+        print(f"Error processing promo command: {e}")
+        try:
+            bot.send_message(cid, "Promo failed to process.")
+        except Exception:
+            pass
         {
             'update_id': cid
             # ...
@@ -327,8 +334,8 @@ def command_bar(message: Message):
     print(push_alert)
     bot.send_message(cid, f'{push_alert} GO BAR', parse_mode="HTML")
     bot.send_poll(cid, 'DRINK BEER SAVE WATER', ["Drink beer", "Discord", "Play computer"], is_anonymous=False)
-    pic_choise = random.randint(0, len(beer_photo))
-    bot.send_photo(cid, beer_photo[pic_choise])
+    pic_choice = random.choice(beer_photo)
+    bot.send_photo(cid, pic_choice)
     # bot.send_poll(cid, 'Poll', {
     #     "Drink beer",
     #     "Play computer"
