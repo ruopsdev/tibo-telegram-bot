@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  test:
+    name: Test Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ['3.13']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install flake8 pytest
+
+    - name: Lint with flake8
+      run: |
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 telegram.py --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings. Line length set to 120
+        flake8 telegram.py --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
+
+    - name: Check Python syntax
+      run: |
+        python -m py_compile telegram.py
+        python -m py_compile manage.py
+
+    - name: Download NLTK data
+      run: |
+        python -c "import nltk; nltk.download('vader_lexicon', quiet=True)"
+
+    - name: Test imports
+      run: |
+        python -c "import telegram; print('telegram.py imports successfully')"
+      continue-on-error: true
+      env:
+        TIBO_TELEGRAM_BOT_TOKEN: "test_token_for_ci"
+        RENDER_SERVICE_ID: "test_service_id"
+        RENDER_API_KEY: "test_api_key"
+
+  security:
+    name: Security Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+
+    - name: Install safety
+      run: |
+        python -m pip install --upgrade pip
+        pip install safety
+
+    - name: Check for security vulnerabilities
+      run: |
+        pip install -r requirements.txt
+        safety check --json || true
+      continue-on-error: true
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+
+    - name: Install code quality tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint bandit
+
+    - name: Run bandit security linter
+      run: |
+        bandit -r telegram.py -f json -o bandit-report.json || true
+      continue-on-error: true
+
+    - name: Check for hardcoded secrets
+      run: |
+        echo "Checking for hardcoded secrets..."
+        if grep -r "sk-" telegram.py; then
+          echo "Warning: Possible API key found"
+          exit 1
+        fi
+        if grep -r "ghp_" telegram.py; then
+          echo "Warning: Possible GitHub token found"
+          exit 1
+        fi
+        echo "No obvious hardcoded secrets found"
