@@ -245,7 +245,6 @@ def command_promo(m):
             'update_id': cid
             # ...
         }
-    )
 
     dp.update.middleware(BapMiddleware("meteoritt"))
 
