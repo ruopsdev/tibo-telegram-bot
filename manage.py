@@ -1,5 +1,6 @@
+import os
 from flask_script import Manager
-from telegram import app
+from telegram import app, bot
 
 manager = Manager(app)
 
